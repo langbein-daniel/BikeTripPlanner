@@ -1,0 +1,44 @@
+version: '3.9'
+name: ${NAME}
+services:
+
+  # TODO: Get OSM_PBF_URL from python script.
+  osm-excerpt:
+    build:
+      context: ./osm-excerpt
+      args:
+        - OSM_PBF_URL=${OSM_PBF_URL}
+        - MIN_LON=${MIN_LON}
+        - MAX_LON=${MAX_LON}
+        - MIN_LAT=${MIN_LAT}
+        - MAX_LAT=${MAX_LAT}
+    profiles: ['osm-excerpt']
+
+  tilemaker:
+    build:
+      # Build a Docker image containing the `tilemaker` command.
+      #
+      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tile-data service below is not (yet) possible.
+      # Thus, we build the image separately.
+      #
+      # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
+      context: github.com/systemed/tilemaker
+    profiles: ['tilemaker']
+
+  tile-data:
+    build:
+      context: tile-data
+      args:
+        # Name of the built `osm-excerpt` image.
+        - NAME=${NAME}
+        - MIN_LON=${MIN_LON}
+        - MAX_LON=${MAX_LON}
+        - MIN_LAT=${MIN_LAT}
+        - MAX_LAT=${MAX_LAT}
+    profiles: ['tile-data']
+
+  tiles:
+    image: ${NAME}-tile-data
+    restart: unless-stopped
+    ports:
+      - '7070:8080/tcp'
