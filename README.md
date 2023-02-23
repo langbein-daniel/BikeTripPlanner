@@ -1,4 +1,4 @@
-# Journey-planner
+# BikeTripPlanner
 
 Get your journey-planner instance up and running with Docker Compose.
 
