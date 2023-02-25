@@ -1,5 +1,7 @@
 ARG NAME=journey-planner
 
+# ADD GIT-URL is not yet stable Dockerfile syntax. Thus, we install and clone with git manually.
+# https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir
 FROM debian:stable-slim as map-style
 # https://hub.docker.com/_/debian/
 RUN apt-get update \
