@@ -1,4 +1,5 @@
 version: '3.9'
+# https://docs.docker.com/compose/compose-file/#name-top-level-element
 name: ${NAME}
 services:
 
@@ -31,6 +32,7 @@ services:
       args:
         # Name of the built `osm-excerpt` image.
         - NAME=${NAME}
+        - MAP_STYLE_URL=${MAP_STYLE_URL}
         - MIN_LON=${MIN_LON}
         - MAX_LON=${MAX_LON}
         - MIN_LAT=${MIN_LAT}
