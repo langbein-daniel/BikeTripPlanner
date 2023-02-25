@@ -1,12 +1,21 @@
 ARG NAME=journey-planner
 
+FROM debian:stable-slim as map-style
+# https://hub.docker.com/_/debian/
+RUN apt-get update \
+    && apt-get install -y git \
+    && rm -rf /var/lib/apt/lists/*
+ARG MAP_STYLE_URL=https://github.com/langbein-daniel/cyclo-bright-gl-style.git
+RUN git clone ${MAP_STYLE_URL} /data
+
 FROM ${NAME}-osm-excerpt as osm
 
 FROM openmaptiles/openmaptiles-tools:7.0 as sprites
-COPY style/icons /icons
+WORKDIR /data
+COPY --from=map-style /data/icons icons
 RUN mkdir /build \
-    && spritezero /build/style /icons \
-    && spritezero --retina /build/style@2x /icons
+    && spritezero /build/style icons \
+    && spritezero --retina /build/style@2x icons
 
 FROM ${NAME}-tilemaker as tilemaker
 RUN apt-get update \
@@ -16,10 +25,8 @@ RUN ln -s /tilemaker /usr/bin/tilemaker
 # Now we have the commands make, bc, curl, unzip, jq and tilemaker available.
 
 WORKDIR /data
-
-ADD style .
+COPY --from=map-style /data .
 COPY --from=sprites /build build/sprites
-
 COPY --from=osm /data/extract.osm.pbf build/unnamed/extract.osm.pbf
 RUN mkdir -p download && touch download/europe.osm.pbf && touch build/unnamed/extract.osm.pbf
 

@@ -1,5 +1,4 @@
 FROM debian:stable-slim
-
 # https://hub.docker.com/_/debian/
 # https://packages.debian.org/stable/osmium-tool
 RUN apt-get update \
