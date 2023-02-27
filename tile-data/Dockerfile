@@ -8,7 +8,7 @@ RUN apt-get update \
     && apt-get install -y git \
     && rm -rf /var/lib/apt/lists/*
 ARG MAP_STYLE_URL=https://github.com/langbein-daniel/cyclo-bright-gl-style.git
-RUN git clone ${MAP_STYLE_URL} /data
+RUN git clone --single-branch ${MAP_STYLE_URL} /data
 
 FROM ${NAME}-osm-excerpt as osm
 
