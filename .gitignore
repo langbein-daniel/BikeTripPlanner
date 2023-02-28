@@ -1,2 +1,5 @@
 /.idea/
+/pelias/data/
+*.0sv
+*.zip
 *.osm.pbf
