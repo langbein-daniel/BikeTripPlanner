@@ -1,67 +1,68 @@
 version: '3.9'
-# https://docs.docker.com/compose/compose-file/#name-top-level-element
-name: ${NAME}
+name: pelias-build
 services:
 
   #
-  # DATA SOURCES
+  # DATA IMPORTERS
   #
 
-  gtfs-data:
+  # https://github.com/pelias/openstreetmap
+  #
+  # The main OSM importer, pelias/openstreetmap, handles venues and addresses.
+  # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
+  openstreetmap:
+    image: ${PELIAS_OPENSTREETMAP}
+    container_name: pelias_openstreetmap
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
+
+  # https://github.com/pelias/polylines
+  #
+  # The pelias/polylines OSM importer handles streets, since dealing with line geometry is a special challenge.
+  # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
+  polylines:
+    image: ${PELIAS_POLYLINES}
+    container_name: pelias_polylines
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
+
+  # Supports importing admin areas and venues from Who's on First
+  # https://github.com/pelias/pelias/#data-importers
+  whosonfirst:
+    image: ${PELIAS_WHOSONFIRST}
+    container_name: pelias_whosonfirst
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
+
+  gtfs:
     build:
-      context: ./gtfs-data
+      context: ${PELIAS_BUILD_DIR}/gtfs
       args:
-        - GTFS_URL=${GTFS_URL}
-    profiles: ['gtfs-data']
-
-  # TODO: Get OSM_PBF_URL from python script.
-  osm-excerpt:
-    build:
-      context: ./osm-excerpt
-      args:
-        - OSM_PBF_URL=${OSM_PBF_URL}
-        - MIN_LON=${MIN_LON}
-        - MAX_LON=${MAX_LON}
-        - MIN_LAT=${MIN_LAT}
-        - MAX_LAT=${MAX_LAT}
-    profiles: ['osm-excerpt']
+        - PELIAS_GTFS_URL=${PELIAS_GTFS_URL}
+    container_name: pelias_gtfs
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
 
   #
-  # BACKGROUND MAP
+  # SETUP
   #
 
-  tilemaker:
-    build:
-      # Build a Docker image containing the `tilemaker` command.
-      #
-      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tile-data service below is not (yet) possible.
-      # Thus, we build the image separately.
-      #
-      # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
-      context: github.com/systemed/tilemaker
-    profiles: ['tilemaker']
-
-  tile-data:
-    build:
-      context: tile-data
-      args:
-        # Name of the built `osm-excerpt` image.
-        - NAME=${NAME}
-        - MAP_STYLE_URL=${MAP_STYLE_URL}
-        - MIN_LON=${MIN_LON}
-        - MAX_LON=${MAX_LON}
-        - MIN_LAT=${MIN_LAT}
-        - MAX_LAT=${MAX_LAT}
-    profiles: ['tile-data']
-
-  tiles:
-    image: ${NAME}-tile-data
-    restart: unless-stopped
-    ports:
-      - '7070:8080/tcp'
+  # https://github.com/pelias/schema/
+  #
+  # pelias-schema sets up Elasticsearch indices properly for Pelias
+  # https://github.com/pelias/pelias/#database
+  schema:
+    image: ${PELIAS_SCHEMA}
+    container_name: pelias_schema
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
 
   #
-  # GEOCODER
+  # SERVICES
   #
 
   # https://github.com/pelias/api
@@ -69,35 +70,16 @@ services:
   # This is the core of Pelias. It talks to all other services (if available), Elasticsearch, and provides the interface for all queries to Pelias.
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   api:
-    build:
-      context: ${PELIAS_BUILD_DIR}
-      dockerfile: ./api.Dockerfile
-      args:
-        - PELIAS_API=${PELIAS_API}
+    image: ${PELIAS_API}
     container_name: pelias_api
     restart: unless-stopped
     environment: [ "PORT=4000" ]
     ports: [ "0.0.0.0:4000:4000" ]
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
     depends_on:
-      libpostal:
-        condition: service_healthy
-      placeholder:
-        condition: service_healthy
-      interpolation:
-        condition: service_healthy
-      pip:
-        condition: service_healthy
       elasticsearch:
         condition: service_healthy
-    # We imported data into two custom layers, stop and station.
-    # If these layers don't exist, something is wrong!
-    # http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station
-    healthcheck:
-      test: curl --fail 'http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station' | grep '"name":"Nürnberg Hbf"' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
 
   # https://github.com/pelias/libpostal-service
   #
@@ -110,12 +92,6 @@ services:
     container_name: pelias_libpostal
     restart: unless-stopped
     ports: [ "127.0.0.1:4400:4400" ]
-    healthcheck:
-      test: curl --fail 'http://localhost:4400/parse?address=Bahnhofsplatz%209,%2090443%20N%C3%BCrnberg,%20Germany' | grep '"label":"city","value":"nürnberg"' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
 
   # https://github.com/pelias/placeholder
   #
@@ -126,27 +102,14 @@ services:
   # Configuration: `PLACEHOLDER_DATA` - Path to the directory where the placeholder service will find the `store.sqlite3` database file.
   # https://github.com/pelias/placeholder#configuration-via-environment-variables
   placeholder:
-    build:
-      context: ${PELIAS_BUILD_DIR}
-      dockerfile: ./placeholder.Dockerfile
-      args:
-        - PELIAS_PLACEHOLDER=${PELIAS_PLACEHOLDER}
+    image: ${PELIAS_PLACEHOLDER}
     container_name: pelias_placeholder
     restart: unless-stopped
     environment: [ "PORT=4100" ]
     ports: [ "127.0.0.1:4100:4100" ]
-    # Possible healthcheck URLs:
-    #   http://localhost:4100/parser/search?text=n%C3%BCrnberg
-    #   http://localhost:4100/parser/findbyid?ids=101905935
-    #   http://localhost:4100/parser/query?text=n%C3%BCrnberg
-    #   http://localhost:4100/parser/tokenize?text=n%C3%BCrnberg
-    #   http://localhost:4100/parser/search?text=nürnberg&lang=rus
-    healthcheck:
-      test: curl --fail 'http://localhost:4100/parser/search?text=n%C3%BCrnberg' | grep '"name":"Nürnberg"' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
 
   # https://github.com/pelias/interpolation
   #
@@ -159,21 +122,14 @@ services:
   # The data is split into 2 different sqlite3 databases: street.db and address.db
   # https://github.com/pelias/interpolation#architecture
   interpolation:
-    build:
-      context: ${PELIAS_BUILD_DIR}
-      dockerfile: ./interpolation.Dockerfile
-      args:
-        - PELIAS_INTERPOLATION=${PELIAS_INTERPOLATION}
+    image: ${PELIAS_INTERPOLATION}
     container_name: pelias_interpolation
     restart: unless-stopped
     environment: [ "PORT=4300" ]
     ports: [ "127.0.0.1:4300:4300" ]
-    healthcheck:
-      test: curl --fail 'localhost:4300/search/geojson?lat=49.44627&lon=11.08221=11&number=9&street=bahnhofsplatz' | grep '"type":"exact"' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
 
   # https://github.com/pelias/pip-service
   #
@@ -183,33 +139,25 @@ services:
   # It will look for Who's on First data in the place configured in `pelias.json`.
   # https://github.com/pelias/pip-service#usage
   pip:
-    build:
-      context: ${PELIAS_BUILD_DIR}
-      dockerfile: ./pip.Dockerfile
-      args:
-        - PELIAS_PIP=${PELIAS_PIP}
+    image: ${PELIAS_PIP}
     container_name: pelias_pip-service
     restart: unless-stopped
     environment: [ "PORT=4200" ]
     ports: [ "127.0.0.1:4200:4200" ]
-    healthcheck:
-      test: curl --fail 'http://localhost:4200/11.08245/49.44511' | grep 'Nürnberg' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
+    volumes:
+      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR}/data:/data"
 
   # The underlying datastore that does most of the query heavy-lifting and powers our search results. We use Elasticsearch. Currently, versions 6 and 7 are supported.
   # https://github.com/pelias/pelias/#database
   elasticsearch:
-    build:
-      context: ${PELIAS_BUILD_DIR}
-      dockerfile: ./elasticsearch.Dockerfile
-      args:
-        - PELIAS_ELASTICSEARCH=${PELIAS_ELASTICSEARCH}
+    image: ${PELIAS_ELASTICSEARCH}
     container_name: pelias_elasticsearch
     restart: unless-stopped
     ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
+    volumes:
+      - "${PELIAS_BUILD_DIR}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+      - "${PELIAS_BUILD_DIR}/data/elasticsearch:/usr/share/elasticsearch/data"
     ulimits:
       memlock:
         soft: -1

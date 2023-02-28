@@ -2,7 +2,7 @@ ARG NAME=journey-planner
 
 # ADD GIT-URL is not yet stable Dockerfile syntax. Thus, we install and clone with git manually.
 # https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir
-FROM debian:stable-slim as map-style
+FROM debian:stable-slim AS map-style
 # https://hub.docker.com/_/debian/
 RUN apt-get update \
     && apt-get install -y git \
@@ -10,16 +10,16 @@ RUN apt-get update \
 ARG MAP_STYLE_URL=https://github.com/langbein-daniel/cyclo-bright-gl-style.git
 RUN git clone --single-branch ${MAP_STYLE_URL} /data
 
-FROM ${NAME}-osm-excerpt as osm
+FROM ${NAME}-osm-excerpt AS osm
 
-FROM openmaptiles/openmaptiles-tools:7.0 as sprites
+FROM openmaptiles/openmaptiles-tools:7.0 AS sprites
 WORKDIR /data
 COPY --from=map-style /data/icons icons
 RUN mkdir /build \
     && spritezero /build/style icons \
     && spritezero --retina /build/style@2x icons
 
-FROM ${NAME}-tilemaker as tilemaker
+FROM ${NAME}-tilemaker AS tilemaker
 RUN apt-get update \
     && apt-get install -y make bc curl unzip jq \
     && rm -rf /var/lib/apt/lists/*
