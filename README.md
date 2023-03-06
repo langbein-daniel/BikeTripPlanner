@@ -18,8 +18,15 @@ sudo docker compose build --pull osm-excerpt
 
 ```shell
 sudo docker compose build --pull tilemaker
-# Don't `--pull` as we are using the local image created by the previous step.
+# Don't `--pull` as we are using the previously built `tilemaker`.
 sudo docker compose build tile-data
+```
+
+## Routing (OpenTripPlanner)
+
+```shell
+# Don't `--pull` as we are using the previously built `osm-excerpt`.
+sudo docker compose build opentripplanner
 ```
 
 ## Geocoder (Pelias)
@@ -58,4 +65,10 @@ sudo docker compose build
 
 ```shell
 sudo docker compose up -d --wait
+```
+
+## Shutdown
+
+```shell
+sudo docker compose down
 ```

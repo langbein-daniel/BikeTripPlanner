@@ -1,0 +1,10 @@
+{
+  "areaVisibility": true,
+
+  "staticBikeParkAndRide": true,
+  "transferRequests": [
+    {
+      "modes": "TRANSIT,BICYCLE_PARK"
+    }
+  ]
+}
