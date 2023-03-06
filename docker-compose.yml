@@ -61,6 +61,21 @@ services:
       - '7070:8080/tcp'
 
   #
+  # ROUTING
+  #
+
+  opentripplanner:
+    build:
+      context: opentripplanner
+      args:
+        - NAME=${NAME}
+        - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS}
+        - JAVA_OPTS=${JAVA_OPTS}
+    restart: unless-stopped
+    ports:
+      - '8080:8080/tcp'
+
+  #
   # GEOCODER
   #
 
