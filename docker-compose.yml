@@ -4,29 +4,6 @@ name: ${NAME}
 services:
 
   #
-  # DATA SOURCES
-  #
-
-  gtfs-data:
-    build:
-      context: ./gtfs-data
-      args:
-        - GTFS_URL=${GTFS_URL}
-    profiles: ['gtfs-data']
-
-  # TODO: Get OSM_PBF_URL from python script.
-  osm-excerpt:
-    build:
-      context: ./osm-excerpt
-      args:
-        - OSM_PBF_URL=${OSM_PBF_URL}
-        - MIN_LON=${MIN_LON}
-        - MAX_LON=${MAX_LON}
-        - MIN_LAT=${MIN_LAT}
-        - MAX_LAT=${MAX_LAT}
-    profiles: ['osm-excerpt']
-
-  #
   # BACKGROUND MAP
   #
 
@@ -34,16 +11,16 @@ services:
     build:
       # Build a Docker image containing the `tilemaker` command.
       #
-      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tile-data service below is not (yet) possible.
+      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tileserver-gl service below is not (yet) possible.
       # Thus, we build the image separately.
       #
       # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
       context: github.com/systemed/tilemaker
     profiles: ['tilemaker']
 
-  tile-data:
+  tileserver-gl:
     build:
-      context: tile-data
+      context: tileserver-gl
       args:
         # Name of the built `osm-excerpt` image.
         - NAME=${NAME}
@@ -52,13 +29,12 @@ services:
         - MAX_LON=${MAX_LON}
         - MIN_LAT=${MIN_LAT}
         - MAX_LAT=${MAX_LAT}
-    profiles: ['tile-data']
-
-  tiles:
-    image: ${NAME}-tile-data
     restart: unless-stopped
     ports:
       - '7070:8080/tcp'
+    environment:
+      VIRTUAL_HOST: "tileserver-gl.localhost"
+      SELF_SIGNED_HOST: "tileserver-gl.localhost"
 
   #
   # ROUTING
@@ -68,12 +44,16 @@ services:
     build:
       context: opentripplanner
       args:
-        - NAME=${NAME}
+        - BUILD_NAME=${BUILD_NAME}
         - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS}
         - JAVA_OPTS=${JAVA_OPTS}
     restart: unless-stopped
     ports:
       - '8080:8080/tcp'
+    environment:
+      - VIRTUAL_PORT=8080
+      - VIRTUAL_HOST=opentripplanner.localhost
+      - SELF_SIGNED_HOST=opentripplanner.localhost
     healthcheck:
       test: |
         curl --request POST --url 'http://localhost:8080/otp/routers/default/index/graphql' --header 'Content-Type: application/json' --header 'OTPTimeout: 1000' --data '{"query":"query agencies {agencies {name}}","operationName":"agencies"}' | grep '{"name":"VGN"}' || exit 1
@@ -98,8 +78,12 @@ services:
         - PELIAS_API=${PELIAS_API}
     container_name: pelias_api
     restart: unless-stopped
-    environment: [ "PORT=4000" ]
-    ports: [ "0.0.0.0:4000:4000" ]
+    environment:
+      - PORT=4000
+      #
+      - VIRTUAL_HOST=pelias.localhost
+      - SELF_SIGNED_HOST=pelias.localhost
+    ports: [ "0.0.0.0:4000:4000/tcp" ]
     depends_on:
       libpostal:
         condition: service_healthy
@@ -260,13 +244,43 @@ services:
       context: github.com/langbein-daniel/digitransit-ui
     environment:
       - CONFIG=btp
-      - OTP_URL=http://opentripplanner:8080/otp/routers/default/
-      - GEOCODING_BASE_URL=http://api:4000/v1
-      - DEFAULT_MAP_URL=http://tiles:7070/styles/bicycle/
+      # Both, the client (user through its webbrowser) and the server (digitransit-ui) connect to these URLs.
+      # The client can't resolve the internal docker hostnames `opentripplanner`, `api` and `tileserver-gl`.
+      # The server can't resolve e.g. opentripplanner at localhost:8080.
+      - OTP_URL=https://opentripplanner.localhost/otp/routers/default/
+      - GEOCODING_BASE_URL=https://pelias.localhost/v1
+      - DEFAULT_MAP_URL=https://tileserver-gl.localhost/styles/bicycle/
+      #
+      - VIRTUAL_HOST=digitransit.localhost
+      - SELF_SIGNED_HOST=digitransit.localhost
+    ports:
+      - '9090:8080/tcp'
     depends_on:
-      tiles:
+      tileserver-gl:
         condition: service_healthy
       api:
         condition: service_healthy
       opentripplanner:
         condition: service_healthy
+
+  #
+  # REVERSE PROXY & CERTIFICATES
+  #
+
+  proxy:
+    container_name: proxy  # Required by proxy-companion to reload this container
+    image: nginxproxy/nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./private/certs:/etc/nginx/certs:ro
+
+  proxy-companion:
+    image: sebastienheyd/self-signed-proxy-companion
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./private/certs:/etc/nginx/certs:rw

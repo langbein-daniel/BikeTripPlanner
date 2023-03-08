@@ -1,6 +1,6 @@
-ARG NAME=journey-planner
-FROM ${NAME}-osm-excerpt AS osm
-FROM ${NAME}-gtfs-data AS gtfs
+ARG BUILD_NAME=journey-planner
+FROM ${BUILD_NAME}-osm-excerpt AS osm
+FROM ${BUILD_NAME}-gtfs-data AS gtfs
 
 FROM docker.io/opentripplanner/opentripplanner:latest
 # Current entrypoint: /docker-entrypoint.sh
