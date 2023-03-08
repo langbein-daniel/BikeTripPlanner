@@ -1,0 +1,24 @@
+version: '3.9'
+name: ${BUILD_NAME}
+services:
+
+  #
+  # DATA SOURCES
+  #
+
+  gtfs-data:
+    build:
+      context: ./gtfs-data
+      args:
+        - GTFS_URL=${GTFS_URL}
+
+  # TODO: Get OSM_PBF_URL from python script.
+  osm-excerpt:
+    build:
+      context: ./osm-excerpt
+      args:
+        - OSM_PBF_URL=${OSM_PBF_URL}
+        - MIN_LON=${MIN_LON}
+        - MAX_LON=${MAX_LON}
+        - MIN_LAT=${MIN_LAT}
+        - MAX_LAT=${MAX_LAT}
