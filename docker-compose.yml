@@ -74,6 +74,13 @@ services:
     restart: unless-stopped
     ports:
       - '8080:8080/tcp'
+    healthcheck:
+      test: |
+        curl --request POST --url 'http://localhost:8080/otp/routers/default/index/graphql' --header 'Content-Type: application/json' --header 'OTPTimeout: 1000' --data '{"query":"query agencies {agencies {name}}","operationName":"agencies"}' | grep '{"name":"VGN"}' || exit 1
+      interval: ${HEALTHCHECK_INTERVAL}
+      retries: 5
+      start_period: 10s
+      timeout: 5s
 
   #
   # GEOCODER
@@ -242,3 +249,24 @@ services:
       retries: 5
       start_period: 20s
       timeout: 5s
+
+  #
+  # WEB UI
+  #
+
+  digitransit-ui:
+    build:
+      # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
+      context: github.com/langbein-daniel/digitransit-ui
+    environment:
+      - CONFIG=btp
+      - OTP_URL=http://opentripplanner:8080/otp/routers/default/
+      - GEOCODING_BASE_URL=http://api:4000/v1
+      - DEFAULT_MAP_URL=http://tiles:7070/styles/bicycle/
+    depends_on:
+      tiles:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+      opentripplanner:
+        condition: service_healthy

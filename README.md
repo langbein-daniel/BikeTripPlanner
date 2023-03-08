@@ -2,19 +2,21 @@
 
 Get your journey-planner instance up and running with Docker Compose.
 
-## GTFS data
+## Build data images
+
+### GTFS data
 
 ```shell
 sudo docker compose build --pull gtfs-data
 ```
 
-## OSM excerpt
+### OSM excerpt
 
 ```shell
 sudo docker compose build --pull osm-excerpt
 ```
 
-## Background map
+### Background map
 
 ```shell
 sudo docker compose build --pull tilemaker
@@ -22,14 +24,14 @@ sudo docker compose build --pull tilemaker
 sudo docker compose build tile-data
 ```
 
-## Routing (OpenTripPlanner)
+### Routing (OpenTripPlanner)
 
 ```shell
 # Don't `--pull` as we are using the previously built `osm-excerpt`.
 sudo docker compose build opentripplanner
 ```
 
-## Geocoder (Pelias)
+### Geocoder (Pelias)
 
 ```shell
 # Set shell variables from `.env`.
@@ -59,6 +61,12 @@ sudo docker compose -f pelias-build.yml down
 sudo docker compose build
 # Remove temporary data directory.
 #sudo rm -r "${PELIAS_BUILD_DIR}/data"
+```
+
+### Web UI (Digitransit)
+
+```shell
+sudo docker compose build --pull digitransit-ui
 ```
 
 ## Startup
