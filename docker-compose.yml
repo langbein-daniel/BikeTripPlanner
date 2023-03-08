@@ -7,23 +7,12 @@ services:
   # BACKGROUND MAP
   #
 
-  tilemaker:
-    build:
-      # Build a Docker image containing the `tilemaker` command.
-      #
-      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tileserver-gl service below is not (yet) possible.
-      # Thus, we build the image separately.
-      #
-      # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
-      context: github.com/systemed/tilemaker
-    profiles: ['tilemaker']
-
   tileserver-gl:
     build:
       context: tileserver-gl
       args:
         # Name of the built `osm-excerpt` image.
-        - NAME=${NAME}
+        - BUILD_NAME=${BUILD_NAME}
         - MAP_STYLE_URL=${MAP_STYLE_URL}
         - MIN_LON=${MIN_LON}
         - MAX_LON=${MAX_LON}
