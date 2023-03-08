@@ -22,8 +22,8 @@ services:
 #    ports:
 #      - '7070:8080/tcp'
     environment:
-      VIRTUAL_HOST: "tileserver-gl.localhost"
-      SELF_SIGNED_HOST: "tileserver-gl.localhost"
+      VIRTUAL_HOST: "${TILESERVER_GL_DOMAIN}"
+      SELF_SIGNED_HOST: "${TILESERVER_GL_DOMAIN}"
     networks:
       - proxy
 
@@ -43,8 +43,8 @@ services:
 #      - '8080:8080/tcp'
     environment:
       - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=opentripplanner.localhost
-      - SELF_SIGNED_HOST=opentripplanner.localhost
+      - VIRTUAL_HOST=${OPENTRIPPLANNER_DOMAIN}
+      - SELF_SIGNED_HOST=${OPENTRIPPLANNER_DOMAIN}
     healthcheck:
       test: |
         curl --request POST --url 'http://localhost:8080/otp/routers/default/index/graphql' --header 'Content-Type: application/json' --header 'OTPTimeout: 1000' --data '{"query":"query agencies {agencies {name}}","operationName":"agencies"}' | grep '{"name":"VGN"}' || exit 1
@@ -75,8 +75,8 @@ services:
       - PORT=4000
       #
       - VIRTUAL_PORT=4000
-      - VIRTUAL_HOST=pelias.localhost
-      - SELF_SIGNED_HOST=pelias.localhost
+      - VIRTUAL_HOST=${API_DOMAIN}
+      - SELF_SIGNED_HOST=${API_DOMAIN}
 #    ports: [ "0.0.0.0:4000:4000/tcp" ]
     # We imported data into two custom layers, stop and station.
     # If these layers don't exist, something is wrong!
@@ -254,12 +254,12 @@ services:
       # Both, the client (user through its webbrowser) and the server (digitransit-ui) connect to these URLs.
       # The client can't resolve the internal docker hostnames `opentripplanner`, `api` and `tileserver-gl`.
       # The server can't resolve e.g. opentripplanner at localhost:8080.
-      - OTP_URL=https://opentripplanner.localhost/otp/routers/default/
-      - GEOCODING_BASE_URL=https://pelias.localhost/v1
-      - DEFAULT_MAP_URL=https://tileserver-gl.localhost/styles/bicycle/
+      - OTP_URL=https://${OPENTRIPPLANNER_DOMAIN}/otp/routers/default/
+      - GEOCODING_BASE_URL=https://${API_DOMAIN}/v1
+      - DEFAULT_MAP_URL=https://${TILESERVER_GL_DOMAIN}/styles/bicycle/
       #
-      - VIRTUAL_HOST=digitransit.localhost
-      - SELF_SIGNED_HOST=digitransit.localhost
+      - VIRTUAL_HOST=${DIGITRANSIT_UI_DOMAIN}
+      - SELF_SIGNED_HOST=${DIGITRANSIT_UI_DOMAIN}
 #    ports:
 #      - '9090:8080/tcp'
     networks:
