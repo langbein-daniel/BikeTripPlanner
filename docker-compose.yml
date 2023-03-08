@@ -19,11 +19,13 @@ services:
         - MIN_LAT=${MIN_LAT}
         - MAX_LAT=${MAX_LAT}
     restart: unless-stopped
-    ports:
-      - '7070:8080/tcp'
+#    ports:
+#      - '7070:8080/tcp'
     environment:
       VIRTUAL_HOST: "tileserver-gl.localhost"
       SELF_SIGNED_HOST: "tileserver-gl.localhost"
+#    networks:
+#      - proxy
 
   #
   # ROUTING
@@ -37,8 +39,8 @@ services:
         - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS}
         - JAVA_OPTS=${JAVA_OPTS}
     restart: unless-stopped
-    ports:
-      - '8080:8080/tcp'
+#    ports:
+#      - '8080:8080/tcp'
     environment:
       - VIRTUAL_PORT=8080
       - VIRTUAL_HOST=opentripplanner.localhost
@@ -50,6 +52,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
+#    networks:
+#      - proxy
 
   #
   # GEOCODER
@@ -70,9 +74,22 @@ services:
     environment:
       - PORT=4000
       #
+      - VIRTUAL_PORT=4000
       - VIRTUAL_HOST=pelias.localhost
       - SELF_SIGNED_HOST=pelias.localhost
-    ports: [ "0.0.0.0:4000:4000/tcp" ]
+#    ports: [ "0.0.0.0:4000:4000/tcp" ]
+    # We imported data into two custom layers, stop and station.
+    # If these layers don't exist, something is wrong!
+    # http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station
+    healthcheck:
+      test: curl --fail 'http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station' | grep '"name":"Nürnberg Hbf"' || exit 1
+      interval: ${HEALTHCHECK_INTERVAL}
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+#    networks:
+#      - proxy
+#      - pelias
     depends_on:
       libpostal:
         condition: service_healthy
@@ -84,15 +101,6 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
-    # We imported data into two custom layers, stop and station.
-    # If these layers don't exist, something is wrong!
-    # http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station
-    healthcheck:
-      test: curl --fail 'http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station' | grep '"name":"Nürnberg Hbf"' || exit 1
-      interval: ${HEALTHCHECK_INTERVAL}
-      retries: 5
-      start_period: 10s
-      timeout: 5s
 
   # https://github.com/pelias/libpostal-service
   #
@@ -104,13 +112,15 @@ services:
     image: ${PELIAS_LIBPOSTAL}
     container_name: pelias_libpostal
     restart: unless-stopped
-    ports: [ "127.0.0.1:4400:4400" ]
+#    ports: [ "127.0.0.1:4400:4400" ]
     healthcheck:
       test: curl --fail 'http://localhost:4400/parse?address=Bahnhofsplatz%209,%2090443%20N%C3%BCrnberg,%20Germany' | grep '"label":"city","value":"nürnberg"' || exit 1
       interval: ${HEALTHCHECK_INTERVAL}
       retries: 5
       start_period: 10s
       timeout: 5s
+#    networks:
+#      - pelias
 
   # https://github.com/pelias/placeholder
   #
@@ -129,7 +139,7 @@ services:
     container_name: pelias_placeholder
     restart: unless-stopped
     environment: [ "PORT=4100" ]
-    ports: [ "127.0.0.1:4100:4100" ]
+#    ports: [ "127.0.0.1:4100:4100" ]
     # Possible healthcheck URLs:
     #   http://localhost:4100/parser/search?text=n%C3%BCrnberg
     #   http://localhost:4100/parser/findbyid?ids=101905935
@@ -142,6 +152,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
+#    networks:
+#      - pelias
 
   # https://github.com/pelias/interpolation
   #
@@ -162,13 +174,15 @@ services:
     container_name: pelias_interpolation
     restart: unless-stopped
     environment: [ "PORT=4300" ]
-    ports: [ "127.0.0.1:4300:4300" ]
+#    ports: [ "127.0.0.1:4300:4300" ]
     healthcheck:
       test: curl --fail 'localhost:4300/search/geojson?lat=49.44627&lon=11.08221=11&number=9&street=bahnhofsplatz' | grep '"type":"exact"' || exit 1
       interval: ${HEALTHCHECK_INTERVAL}
       retries: 5
       start_period: 10s
       timeout: 5s
+#    networks:
+#      - pelias
 
   # https://github.com/pelias/pip-service
   #
@@ -186,13 +200,15 @@ services:
     container_name: pelias_pip-service
     restart: unless-stopped
     environment: [ "PORT=4200" ]
-    ports: [ "127.0.0.1:4200:4200" ]
+#    ports: [ "127.0.0.1:4200:4200" ]
     healthcheck:
       test: curl --fail 'http://localhost:4200/11.08245/49.44511' | grep 'Nürnberg' || exit 1
       interval: ${HEALTHCHECK_INTERVAL}
       retries: 5
       start_period: 10s
       timeout: 5s
+#    networks:
+#      - pelias
 
   # The underlying datastore that does most of the query heavy-lifting and powers our search results. We use Elasticsearch. Currently, versions 6 and 7 are supported.
   # https://github.com/pelias/pelias/#database
@@ -204,7 +220,7 @@ services:
         - PELIAS_ELASTICSEARCH=${PELIAS_ELASTICSEARCH}
     container_name: pelias_elasticsearch
     restart: unless-stopped
-    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
+#    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     ulimits:
       memlock:
         soft: -1
@@ -222,6 +238,8 @@ services:
       retries: 5
       start_period: 20s
       timeout: 5s
+#    networks:
+#      - pelias
 
   #
   # WEB UI
@@ -242,8 +260,10 @@ services:
       #
       - VIRTUAL_HOST=digitransit.localhost
       - SELF_SIGNED_HOST=digitransit.localhost
-    ports:
-      - '9090:8080/tcp'
+#    ports:
+#      - '9090:8080/tcp'
+#    networks:
+#      - proxy
     depends_on:
       tileserver-gl:
         condition: service_healthy
@@ -261,11 +281,13 @@ services:
     image: nginxproxy/nginx-proxy
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80/tcp"
+      - "443:443/tcp"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./private/certs:/etc/nginx/certs:ro
+#    networks:
+#      - proxy
 
   proxy-companion:
     image: sebastienheyd/self-signed-proxy-companion
@@ -273,3 +295,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./private/certs:/etc/nginx/certs:rw
+
+#networks:
+#  proxy:
+#  pelias:
