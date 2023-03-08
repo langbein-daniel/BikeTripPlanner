@@ -24,8 +24,8 @@ services:
     environment:
       VIRTUAL_HOST: "tileserver-gl.localhost"
       SELF_SIGNED_HOST: "tileserver-gl.localhost"
-#    networks:
-#      - proxy
+    networks:
+      - proxy
 
   #
   # ROUTING
@@ -52,8 +52,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - proxy
+    networks:
+      - proxy
 
   #
   # GEOCODER
@@ -87,9 +87,9 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - proxy
-#      - pelias
+    networks:
+      - proxy
+      - pelias
     depends_on:
       libpostal:
         condition: service_healthy
@@ -119,8 +119,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - pelias
+    networks:
+      - pelias
 
   # https://github.com/pelias/placeholder
   #
@@ -152,8 +152,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - pelias
+    networks:
+      - pelias
 
   # https://github.com/pelias/interpolation
   #
@@ -181,8 +181,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - pelias
+    networks:
+      - pelias
 
   # https://github.com/pelias/pip-service
   #
@@ -207,8 +207,8 @@ services:
       retries: 5
       start_period: 10s
       timeout: 5s
-#    networks:
-#      - pelias
+    networks:
+      - pelias
 
   # The underlying datastore that does most of the query heavy-lifting and powers our search results. We use Elasticsearch. Currently, versions 6 and 7 are supported.
   # https://github.com/pelias/pelias/#database
@@ -238,8 +238,8 @@ services:
       retries: 5
       start_period: 20s
       timeout: 5s
-#    networks:
-#      - pelias
+    networks:
+      - pelias
 
   #
   # WEB UI
@@ -262,8 +262,8 @@ services:
       - SELF_SIGNED_HOST=digitransit.localhost
 #    ports:
 #      - '9090:8080/tcp'
-#    networks:
-#      - proxy
+    networks:
+      - proxy
     depends_on:
       tileserver-gl:
         condition: service_healthy
@@ -286,8 +286,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./private/certs:/etc/nginx/certs:ro
-#    networks:
-#      - proxy
+    networks:
+      - proxy
 
   proxy-companion:
     image: sebastienheyd/self-signed-proxy-companion
@@ -296,6 +296,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./private/certs:/etc/nginx/certs:rw
 
-#networks:
-#  proxy:
-#  pelias:
+networks:
+  proxy:
+  pelias:
