@@ -19,7 +19,7 @@ sudo docker compose -f build-data.yml build --pull osm-excerpt
 ### Background map (Tileserver GL)
 
 ```shell
-sudo docker compose build --pull tilemaker
+sudo docker compose -f build-tilemaker.yml build --pull tilemaker
 # Don't `--pull` as we are using the previously built `tilemaker`.
 sudo docker compose build tileserver-gl
 ```
