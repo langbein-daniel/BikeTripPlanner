@@ -19,11 +19,8 @@ services:
         - MIN_LAT=${MIN_LAT}
         - MAX_LAT=${MAX_LAT}
     restart: unless-stopped
-#    ports:
-#      - '7070:8080/tcp'
-    environment:
-      VIRTUAL_HOST: "${TILESERVER_GL_DOMAIN}"
-      SELF_SIGNED_HOST: "${TILESERVER_GL_DOMAIN}"
+    ports:
+      - '7070:8080/tcp'
     networks:
       - proxy
 
@@ -39,12 +36,8 @@ services:
         - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS}
         - JAVA_OPTS=${JAVA_OPTS}
     restart: unless-stopped
-#    ports:
-#      - '8080:8080/tcp'
-    environment:
-      - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=${OPENTRIPPLANNER_DOMAIN}
-      - SELF_SIGNED_HOST=${OPENTRIPPLANNER_DOMAIN}
+    ports:
+      - '8080:8080/tcp'
     healthcheck:
       test: |
         curl --request POST --url 'http://localhost:8080/otp/routers/default/index/graphql' --header 'Content-Type: application/json' --header 'OTPTimeout: 1000' --data '{"query":"query agencies {agencies {name}}","operationName":"agencies"}' | grep '{"name":"VGN"}' || exit 1
@@ -73,11 +66,7 @@ services:
     restart: unless-stopped
     environment:
       - PORT=4000
-      #
-      - VIRTUAL_PORT=4000
-      - VIRTUAL_HOST=${API_DOMAIN}
-      - SELF_SIGNED_HOST=${API_DOMAIN}
-#    ports: [ "0.0.0.0:4000:4000/tcp" ]
+    ports: [ "0.0.0.0:4000:4000/tcp" ]
     # We imported data into two custom layers, stop and station.
     # If these layers don't exist, something is wrong!
     # http://localhost:4000/v1/search?text=n%C3%BCrnberg&lang=en&layers=stop,station
@@ -252,16 +241,11 @@ services:
     environment:
       - CONFIG=btp
       # Both, the client (user through its webbrowser) and the server (digitransit-ui) connect to these URLs.
-      # The client can't resolve the internal docker hostnames `opentripplanner`, `api` and `tileserver-gl`.
-      # The server can't resolve e.g. opentripplanner at localhost:8080.
-      - OTP_URL=https://${OPENTRIPPLANNER_DOMAIN}/otp/routers/default/
-      - GEOCODING_BASE_URL=https://${API_DOMAIN}/v1
-      - DEFAULT_MAP_URL=https://${TILESERVER_GL_DOMAIN}/styles/bicycle/
-      #
-      - VIRTUAL_HOST=${DIGITRANSIT_UI_DOMAIN}
-      - SELF_SIGNED_HOST=${DIGITRANSIT_UI_DOMAIN}
-#    ports:
-#      - '9090:8080/tcp'
+      - OTP_URL=http://opentripplanner:8080/otp/routers/default/
+      - GEOCODING_BASE_URL=http://api:4000/v1
+      - DEFAULT_MAP_URL=http://tileserver-gl:7070/styles/bicycle/
+    ports:
+      - '9090:8080/tcp'
     networks:
       - proxy
     depends_on:
@@ -271,30 +255,6 @@ services:
         condition: service_healthy
       opentripplanner:
         condition: service_healthy
-
-  #
-  # REVERSE PROXY & CERTIFICATES
-  #
-
-  proxy:
-    container_name: proxy  # Required by proxy-companion to reload this container
-    image: nginxproxy/nginx-proxy
-    restart: unless-stopped
-    ports:
-      - "80:80/tcp"
-      - "443:443/tcp"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./private/certs:/etc/nginx/certs:ro
-    networks:
-      - proxy
-
-  proxy-companion:
-    image: sebastienheyd/self-signed-proxy-companion
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./private/certs:/etc/nginx/certs:rw
 
 networks:
   proxy:

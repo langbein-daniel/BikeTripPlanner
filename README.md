@@ -69,7 +69,22 @@ sudo docker compose build
 sudo docker compose build --pull digitransit-ui
 ```
 
-## Startup
+## Startup - Local development setup
+
+The `digitransit-ui` service has to be configured with the URLs of three dependent services.
+Both, the client (webbrowser of a user) and the server (the `digitransit-ui` service itself) connect to these URLs.
+
+As docker isolates the services from the host network, the `digitransit-ui` service can't e.g. connect to the `api` service through `localhost`. Instead, the hostname of the `api` service has to be used.
+
+To be able to test the Digitransit UI locally in your browser, add the following three entries to `/etc/hosts`:
+
+```
+127.0.0.1 opentripplanner
+127.0.0.1 tileserver-gl
+127.0.0.1 api
+```
+
+Start all services and wait for them to be healthy:
 
 ```shell
 sudo docker compose up -d --wait
