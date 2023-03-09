@@ -84,6 +84,8 @@ To be able to test the Digitransit UI locally in your browser, add the following
 127.0.0.1 api
 ```
 
+Note: It may further be necessary to disable the https-only mode of your webbrowser if it "upgrades" connections such as http://opentripplanner to https://opentripplanner.
+
 Start all services and wait for them to be healthy:
 
 ```shell
