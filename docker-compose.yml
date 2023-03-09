@@ -62,7 +62,6 @@ services:
       dockerfile: ./api.Dockerfile
       args:
         - PELIAS_API=${PELIAS_API}
-    container_name: pelias_api
     restart: unless-stopped
     environment:
       - PORT=4000
@@ -99,7 +98,6 @@ services:
   # GIF demonstration on parsing a full address input: https://github.com/openvenues/libpostal#examples-of-parsing
   libpostal:
     image: ${PELIAS_LIBPOSTAL}
-    container_name: pelias_libpostal
     restart: unless-stopped
 #    ports: [ "127.0.0.1:4400:4400" ]
     healthcheck:
@@ -125,7 +123,6 @@ services:
       dockerfile: ./placeholder.Dockerfile
       args:
         - PELIAS_PLACEHOLDER=${PELIAS_PLACEHOLDER}
-    container_name: pelias_placeholder
     restart: unless-stopped
     environment: [ "PORT=4100" ]
 #    ports: [ "127.0.0.1:4100:4100" ]
@@ -160,7 +157,6 @@ services:
       dockerfile: ./interpolation.Dockerfile
       args:
         - PELIAS_INTERPOLATION=${PELIAS_INTERPOLATION}
-    container_name: pelias_interpolation
     restart: unless-stopped
     environment: [ "PORT=4300" ]
 #    ports: [ "127.0.0.1:4300:4300" ]
@@ -186,7 +182,6 @@ services:
       dockerfile: ./pip.Dockerfile
       args:
         - PELIAS_PIP=${PELIAS_PIP}
-    container_name: pelias_pip-service
     restart: unless-stopped
     environment: [ "PORT=4200" ]
 #    ports: [ "127.0.0.1:4200:4200" ]
@@ -207,7 +202,6 @@ services:
       dockerfile: ./elasticsearch.Dockerfile
       args:
         - PELIAS_ELASTICSEARCH=${PELIAS_ELASTICSEARCH}
-    container_name: pelias_elasticsearch
     restart: unless-stopped
 #    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     ulimits:
