@@ -35,8 +35,8 @@ sudo docker compose build opentripplanner
 
 ```shell
 # Set shell variables from `.env`.
-export "$(cat .env | grep '^BUILD_NAME=')" 
-export "$(cat .env | grep '^PELIAS_BUILD_DIR=')" 
+export "$(grep '^BUILD_NAME=' < .env)"
+export "$(grep '^PELIAS_BUILD_DIR=' < .env)"
 # Create temporary Pelias data directory.
 mkdir -p "${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 # Start Elasticsearch and wait until healthy.
@@ -69,7 +69,7 @@ sudo docker compose build
 sudo docker compose build --pull digitransit-ui
 ```
 
-## Startup - Local development setup
+## Test on local machine
 
 The `digitransit-ui` service has to be configured with the URLs of three dependent services.
 Both, the client (webbrowser of a user) and the server (the `digitransit-ui` service itself) connect to these URLs.
@@ -86,13 +86,15 @@ To be able to test the Digitransit UI locally in your browser, add the following
 
 Note: It may further be necessary to disable the https-only mode of your webbrowser if it "upgrades" connections such as http://opentripplanner to https://opentripplanner.
 
+### Startup
+
 Start all services and wait for them to be healthy:
 
 ```shell
 sudo docker compose up -d --wait
 ```
 
-## Shutdown
+### Shutdown
 
 ```shell
 sudo docker compose down
