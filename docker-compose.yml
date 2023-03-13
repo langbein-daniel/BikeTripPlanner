@@ -197,9 +197,9 @@ services:
     environment:
       - CONFIG=btp
       # Both, the client (user through its webbrowser) and the server (digitransit-ui) connect to these URLs.
-      - OTP_URL=http://opentripplanner:8080/otp/routers/default/
-      - GEOCODING_BASE_URL=http://api:4000/v1
-      - DEFAULT_MAP_URL=http://tileserver-gl:7070/styles/bicycle/
+      - OTP_URL=http://localhost:8080/otp/routers/default/
+      - GEOCODING_BASE_URL=http://localhost:4000/v1
+      - DEFAULT_MAP_URL=http://localhost:7070/styles/bicycle/
     ports:
       - '9090:8080/tcp'
     networks:
