@@ -79,6 +79,18 @@ Start all services and wait for them to be healthy:
 sudo docker compose up -d --wait
 ```
 
+### Verify healthcheck output
+
+* https://docs.docker.com/engine/reference/builder/#healthcheck
+
+For each docker container the first 4096 bytes of healthcheck output can be viewed with:
+
+```shell
+CONTAINER=libpostal
+CONTAINER_ID="$(sudo docker compose ps -q "${CONTAINER}")"
+sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log'
+```
+
 ### Shutdown
 
 ```shell
