@@ -83,7 +83,7 @@ sudo docker compose up -d --wait
 
 * https://docs.docker.com/engine/reference/builder/#healthcheck
 
-For each docker container the first 4096 bytes of healthcheck output can be viewed with:
+The first 4096 bytes of a containers healthcheck output can be viewed with:
 
 ```shell
 CONTAINER=libpostal
