@@ -1,6 +1,5 @@
-ARG PELIAS_API=pelias/api:master
-FROM ${PELIAS_API}
-COPY ./pelias.json /code/pelias.json
+ARG PELIAS_LIBPOSTAL=pelias/libpostal-service
+FROM ${PELIAS_LIBPOSTAL}
 
 COPY ./check-health.sh /bin/check-health
 ARG HEALTHCHECK_REQUEST

@@ -58,7 +58,7 @@ sudo docker compose -f build-pelias.yml run --build --rm gtfs  ./bin/start
 # Stop and remove intermediate containers.
 sudo docker compose -f build-pelias.yml down
 # Build final Pelias containers.
-sudo docker compose build
+sudo docker compose build api libpostal placeholder interpolation pip elasticsearch
 # Remove temporary data directory.
 #sudo rm -r "${PELIAS_BUILD_DIR}/data"
 ```
