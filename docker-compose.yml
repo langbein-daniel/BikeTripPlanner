@@ -1,6 +1,9 @@
 version: '3.9'
 # https://docs.docker.com/compose/compose-file/#name-top-level-element
 name: ${NAME}
+networks:
+  proxy:
+  pelias:
 services:
 
   #
@@ -210,7 +213,3 @@ services:
         condition: service_healthy
       opentripplanner:
         condition: service_healthy
-
-networks:
-  proxy:
-  pelias:

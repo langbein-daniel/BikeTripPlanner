@@ -86,8 +86,8 @@ sudo docker compose up -d --wait
 The first 4096 bytes of a containers healthcheck output can be viewed with:
 
 ```shell
-CONTAINER=libpostal
-CONTAINER_ID="$(sudo docker compose ps -q "${CONTAINER}")"
+CONTAINER=libpostal && \
+CONTAINER_ID="$(sudo docker compose ps -q "${CONTAINER}")" && \
 sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log'
 ```
 
@@ -95,4 +95,21 @@ sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log'
 
 ```shell
 sudo docker compose down
+```
+
+## Deployment
+
+### Publish images
+
+Tag and push the locally built images to a docker container registry.
+
+```shell
+./publish.sh
+```
+
+### Example deployment with Let's Encrypt certificates
+
+```shell
+cd deployment
+sudo docker compose up -d --wait
 ```

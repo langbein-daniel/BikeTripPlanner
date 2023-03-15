@@ -12,7 +12,6 @@ services:
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   openstreetmap:
     image: ${PELIAS_OPENSTREETMAP}
-    container_name: pelias_openstreetmap
     volumes:
       - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR}/data:/data"
@@ -23,7 +22,6 @@ services:
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   polylines:
     image: ${PELIAS_POLYLINES}
-    container_name: pelias_polylines
     volumes:
       - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR}/data:/data"
@@ -32,7 +30,6 @@ services:
   # https://github.com/pelias/pelias/#data-importers
   whosonfirst:
     image: ${PELIAS_WHOSONFIRST}
-    container_name: pelias_whosonfirst
     volumes:
       - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR}/data:/data"
@@ -42,7 +39,6 @@ services:
       context: ${PELIAS_BUILD_DIR}/gtfs
       args:
         - PELIAS_GTFS_URL=${PELIAS_GTFS_URL}
-    container_name: pelias_gtfs
     volumes:
       - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR}/data:/data"
@@ -57,7 +53,6 @@ services:
   # https://github.com/pelias/pelias/#database
   schema:
     image: ${PELIAS_SCHEMA}
-    container_name: pelias_schema
     volumes:
       - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
 
@@ -71,7 +66,6 @@ services:
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   api:
     image: ${PELIAS_API}
-    container_name: pelias_api
     restart: unless-stopped
     environment: [ "PORT=4000" ]
     ports: [ "0.0.0.0:4000:4000" ]
@@ -89,7 +83,6 @@ services:
   # GIF demonstration on parsing a full address input: https://github.com/openvenues/libpostal#examples-of-parsing
   libpostal:
     image: ${PELIAS_LIBPOSTAL}
-    container_name: pelias_libpostal
     restart: unless-stopped
     ports: [ "127.0.0.1:4400:4400" ]
 
@@ -103,7 +96,6 @@ services:
   # https://github.com/pelias/placeholder#configuration-via-environment-variables
   placeholder:
     image: ${PELIAS_PLACEHOLDER}
-    container_name: pelias_placeholder
     restart: unless-stopped
     environment: [ "PORT=4100" ]
     ports: [ "127.0.0.1:4100:4100" ]
@@ -123,7 +115,6 @@ services:
   # https://github.com/pelias/interpolation#architecture
   interpolation:
     image: ${PELIAS_INTERPOLATION}
-    container_name: pelias_interpolation
     restart: unless-stopped
     environment: [ "PORT=4300" ]
     ports: [ "127.0.0.1:4300:4300" ]
@@ -140,7 +131,6 @@ services:
   # https://github.com/pelias/pip-service#usage
   pip:
     image: ${PELIAS_PIP}
-    container_name: pelias_pip-service
     restart: unless-stopped
     environment: [ "PORT=4200" ]
     ports: [ "127.0.0.1:4200:4200" ]
@@ -152,7 +142,6 @@ services:
   # https://github.com/pelias/pelias/#database
   elasticsearch:
     image: ${PELIAS_ELASTICSEARCH}
-    container_name: pelias_elasticsearch
     restart: unless-stopped
     ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     volumes:
