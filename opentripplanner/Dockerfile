@@ -29,10 +29,8 @@ ARG JAVA_OPTS
 ENV JAVA_OPTS ${JAVA_OPTS}
 CMD ["--load", "--serve"]
 
-# Start period 45s is too short.
-# Timeout 5s is too short.
 COPY ./check-health.sh /bin/check-health
 ARG HEALTHCHECK_AGENCY_NAME=VGN
 ENV HEALTHCHECK_AGENCY_NAME=${HEALTHCHECK_AGENCY_NAME}
-HEALTHCHECK --interval=30s --retries=1 --start-period=60s --timeout=2s \
+HEALTHCHECK --interval=15s --retries=1 --start-period=60s --timeout=5s \
  CMD /bin/check-health
