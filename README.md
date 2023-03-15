@@ -88,7 +88,7 @@ The first 4096 bytes of a containers healthcheck output can be viewed with:
 ```shell
 CONTAINER=libpostal && \
 CONTAINER_ID="$(sudo docker compose ps -q "${CONTAINER}")" && \
-sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log'
+sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log[].Output'
 ```
 
 ### Shutdown

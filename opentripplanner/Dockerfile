@@ -32,5 +32,5 @@ CMD ["--load", "--serve"]
 COPY ./check-health.sh /bin/check-health
 ARG HEALTHCHECK_AGENCY_NAME=VGN
 ENV HEALTHCHECK_AGENCY_NAME=${HEALTHCHECK_AGENCY_NAME}
-HEALTHCHECK --interval=15s --retries=1 --start-period=60s --timeout=5s \
+HEALTHCHECK --interval=15s --retries=3 --start-period=45s --timeout=5s \
  CMD /bin/check-health
