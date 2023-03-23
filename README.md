@@ -2,6 +2,10 @@
 
 Get your journey-planner instance up and running with Docker Compose.
 
+## Configuration
+
+Go through [.env](.env) and adjust the values as desired.
+
 ## Build data images
 
 ### GTFS data
