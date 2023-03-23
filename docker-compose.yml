@@ -15,13 +15,13 @@ services:
       context: tileserver-gl
       args:
         # Name of the built `osm-excerpt` image.
-        - BUILD_NAME=${BUILD_NAME}
-        - MAP_STYLE_URL=${MAP_STYLE_URL}
-        - REGION_URL=${OSM_PBF_URL}
-        - MIN_LON=${MIN_LON}
-        - MAX_LON=${MAX_LON}
-        - MIN_LAT=${MIN_LAT}
-        - MAX_LAT=${MAX_LAT}
+        - BUILD_NAME=${BUILD_NAME:?}
+        - MAP_STYLE_URL=${MAP_STYLE_URL:?}
+        - REGION_URL=${OSM_PBF_URL:?}
+        - MIN_LON=${MIN_LON:?}
+        - MAX_LON=${MAX_LON:?}
+        - MIN_LAT=${MIN_LAT:?}
+        - MAX_LAT=${MAX_LAT:?}
     restart: unless-stopped
     ports:
       - '7070:8080/tcp'
@@ -36,10 +36,10 @@ services:
     build:
       context: opentripplanner
       args:
-        - BUILD_NAME=${BUILD_NAME}
-        - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS}
-        - JAVA_OPTS=${JAVA_OPTS}
-        - HEALTHCHECK_AGENCY_NAME=${HEALTHCHECK_OPENTRIPPLANNER}
+        - BUILD_NAME=${BUILD_NAME:?}
+        - JAVA_BUILD_OPTS=${JAVA_BUILD_OPTS:?}
+        - JAVA_OPTS=${JAVA_OPTS:?}
+        - HEALTHCHECK_AGENCY_NAME=${HEALTHCHECK_OPENTRIPPLANNER:?}
     restart: unless-stopped
     ports:
       - '8080:8080/tcp'
@@ -56,12 +56,12 @@ services:
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   api:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./api.Dockerfile
       args:
-        - PELIAS_API=${PELIAS_API}
-        - HEALTHCHECK_REQUEST=${HEALTHCHECK_API_REQUEST}
-        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_API_RESPONSE}
+        - PELIAS_API=${PELIAS_API:?}
+        - HEALTHCHECK_REQUEST=${HEALTHCHECK_API_REQUEST:?}
+        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_API_RESPONSE:?}
     restart: unless-stopped
     environment:
       - PORT=4000
@@ -89,12 +89,12 @@ services:
   # GIF demonstration on parsing a full address input: https://github.com/openvenues/libpostal#examples-of-parsing
   libpostal:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./libpostal.Dockerfile
       args:
-        - PELIAS_LIBPOSTAL=${PELIAS_LIBPOSTAL}
-        - HEALTHCHECK_REQUEST=${HEALTHCHECK_LIBPOSTAL_REQUEST}
-        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_LIBPOSTAL_RESPONSE}
+        - PELIAS_LIBPOSTAL=${PELIAS_LIBPOSTAL:?}
+        - HEALTHCHECK_REQUEST=${HEALTHCHECK_LIBPOSTAL_REQUEST:?}
+        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
     restart: unless-stopped
 #    ports: [ "127.0.0.1:4400:4400" ]
     networks:
@@ -110,12 +110,12 @@ services:
   # https://github.com/pelias/placeholder#configuration-via-environment-variables
   placeholder:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./placeholder.Dockerfile
       args:
-        - PELIAS_PLACEHOLDER=${PELIAS_PLACEHOLDER}
-        - HEALTHCHECK_REQUEST=${HEALTHCHECK_PLACEHOLDER_REQUEST}
-        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PLACEHOLDER_RESPONSE}
+        - PELIAS_PLACEHOLDER=${PELIAS_PLACEHOLDER:?}
+        - HEALTHCHECK_REQUEST=${HEALTHCHECK_PLACEHOLDER_REQUEST:?}
+        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PLACEHOLDER_RESPONSE:?}
     restart: unless-stopped
     environment: [ "PORT=4100" ]
 #    ports: [ "127.0.0.1:4100:4100" ]
@@ -134,12 +134,12 @@ services:
   # https://github.com/pelias/interpolation#architecture
   interpolation:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./interpolation.Dockerfile
       args:
-        - PELIAS_INTERPOLATION=${PELIAS_INTERPOLATION}
-        - HEALTHCHECK_REQUEST=${HEALTHCHECK_INTERPOLATION_REQUEST}
-        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_INTERPOLATION_RESPONSE}
+        - PELIAS_INTERPOLATION=${PELIAS_INTERPOLATION:?}
+        - HEALTHCHECK_REQUEST=${HEALTHCHECK_INTERPOLATION_REQUEST:?}
+        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_INTERPOLATION_RESPONSE:?}
     restart: unless-stopped
     environment: [ "PORT=4300" ]
 #    ports: [ "127.0.0.1:4300:4300" ]
@@ -155,12 +155,12 @@ services:
   # https://github.com/pelias/pip-service#usage
   pip:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./pip.Dockerfile
       args:
-        - PELIAS_PIP=${PELIAS_PIP}
-        - HEALTHCHECK_REQUEST=${HEALTHCHECK_PIP_REQUEST}
-        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PIP_RESPONSE}
+        - PELIAS_PIP=${PELIAS_PIP:?}
+        - HEALTHCHECK_REQUEST=${HEALTHCHECK_PIP_REQUEST:?}
+        - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PIP_RESPONSE:?}
     restart: unless-stopped
     environment: [ "PORT=4200" ]
 #    ports: [ "127.0.0.1:4200:4200" ]
@@ -171,10 +171,10 @@ services:
   # https://github.com/pelias/pelias/#database
   elasticsearch:
     build:
-      context: ${PELIAS_BUILD_DIR}
+      context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./elasticsearch.Dockerfile
       args:
-        - PELIAS_ELASTICSEARCH=${PELIAS_ELASTICSEARCH}
+        - PELIAS_ELASTICSEARCH=${PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
 #    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     ulimits:
