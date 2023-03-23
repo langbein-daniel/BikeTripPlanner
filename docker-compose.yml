@@ -17,6 +17,7 @@ services:
         # Name of the built `osm-excerpt` image.
         - BUILD_NAME=${BUILD_NAME}
         - MAP_STYLE_URL=${MAP_STYLE_URL}
+        - REGION_URL=${OSM_PBF_URL}
         - MIN_LON=${MIN_LON}
         - MAX_LON=${MAX_LON}
         - MIN_LAT=${MIN_LAT}

@@ -30,18 +30,22 @@ WORKDIR /data
 COPY --from=map-style /data .
 COPY --from=sprites /build build/sprites
 COPY --from=osm /data/extract.osm.pbf build/unnamed/extract.osm.pbf
-RUN mkdir -p download && touch download/europe.osm.pbf && touch build/unnamed/extract.osm.pbf
+ARG REGION_URL=https://download.geofabrik.de/europe/germany-latest.osm.pbf
+RUN mkdir -p download \
+    && touch "download/$(basename ${REGION_URL})" \
+    && touch build/unnamed/extract.osm.pbf
 
 ARG MIN_LON=10.011636032586688
 ARG MAX_LON=12.223993889052613
 ARG MIN_LAT=48.70792025947608
 ARG MAX_LAT=50.25793688217101
 RUN make \
+  "REGION_URL=${REGION_URL}" \
   NAME=unnamed \
-  ${MIN_LON}=10.011636032586688 \
-  ${MAX_LON}=12.223993889052613 \
-  ${MIN_LAT}=48.70792025947608 \
-  ${MAX_LAT}=50.25793688217101 \
+  MIN_LON=${MIN_LON} \
+  MAX_LON=${MAX_LON} \
+  MIN_LAT=${MIN_LAT} \
+  MAX_LAT=${MAX_LAT} \
   data-tileserver-gl \
   && rm data-tileserver-gl/.data-unnamed \
   && make clean
