@@ -8,6 +8,10 @@ Go through [.env](.env) and adjust the values as desired.
 
 ## Build data images
 
+The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
+
+TLDR: Just run `make` to build all Docker images.
+
 ### GTFS data
 
 If the GTFS data set is valid and contains bicycle information, run the following:
