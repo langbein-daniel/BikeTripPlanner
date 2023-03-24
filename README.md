@@ -2,6 +2,11 @@
 
 Get your journey-planner instance up and running with Docker Compose.
 
+A demo instance covering the area of the German transport association
+VGN is available at [https://biketripplanner.privacy1st.de/](https://biketripplanner.privacy1st.de/).
+
+![nuremberg-bike-and-ride.png](screenshot-nuremberg-bike-and-ride.png)
+
 ## Configuration
 
 Go through [.env](.env) and adjust the values as desired.
