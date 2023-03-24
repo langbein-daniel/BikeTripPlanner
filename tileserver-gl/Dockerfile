@@ -1,4 +1,4 @@
-ARG BUILD_NAME=journey-planner
+ARG BUILD_NAME=build
 
 # ADD GIT-URL is not yet stable Dockerfile syntax. Thus, we install and clone with git manually.
 # https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir

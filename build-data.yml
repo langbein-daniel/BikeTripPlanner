@@ -6,13 +6,14 @@ services:
   # DATA SOURCES
   #
 
+  # Download GTFS zip file.
   gtfs-data:
     build:
       context: ./gtfs-data
       args:
         - GTFS_URL=${GTFS_URL}
 
-  # TODO: Get OSM_PBF_URL from python script.
+  # Download OSM region and cut with bounding-box.
   osm-excerpt:
     build:
       context: ./osm-excerpt
