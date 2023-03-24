@@ -1,5 +1,5 @@
 version: '3.9'
-name: ${BUILD_NAME}
+name: ${BUILD_NAME:?}
 services:
 
   #
@@ -11,15 +11,15 @@ services:
     build:
       context: ./gtfs-data
       args:
-        - GTFS_URL=${GTFS_URL}
+        - GTFS_URL=${GTFS_URL:?}
 
   # Download OSM region and cut with bounding-box.
   osm-excerpt:
     build:
       context: ./osm-excerpt
       args:
-        - OSM_PBF_URL=${OSM_PBF_URL}
-        - MIN_LON=${MIN_LON}
-        - MAX_LON=${MAX_LON}
-        - MIN_LAT=${MIN_LAT}
-        - MAX_LAT=${MAX_LAT}
+        - OSM_PBF_URL=${OSM_PBF_URL:?}
+        - MIN_LON=${MIN_LON:?}
+        - MAX_LON=${MAX_LON:?}
+        - MIN_LAT=${MIN_LAT:?}
+        - MAX_LAT=${MAX_LAT:?}

@@ -11,37 +11,37 @@ services:
   # The main OSM importer, pelias/openstreetmap, handles venues and addresses.
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   openstreetmap:
-    image: ${PELIAS_OPENSTREETMAP}
+    image: ${PELIAS_OPENSTREETMAP:?}
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   # https://github.com/pelias/polylines
   #
   # The pelias/polylines OSM importer handles streets, since dealing with line geometry is a special challenge.
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   polylines:
-    image: ${PELIAS_POLYLINES}
+    image: ${PELIAS_POLYLINES:?}
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   # Supports importing admin areas and venues from Who's on First
   # https://github.com/pelias/pelias/#data-importers
   whosonfirst:
-    image: ${PELIAS_WHOSONFIRST}
+    image: ${PELIAS_WHOSONFIRST:?}
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   gtfs:
     build:
-      context: ${PELIAS_BUILD_DIR}/gtfs
+      context: ${PELIAS_BUILD_DIR:?}/gtfs
       args:
-        - PELIAS_GTFS_URL=${PELIAS_GTFS_URL}
+        - PELIAS_GTFS_URL=${PELIAS_GTFS_URL:?}
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   #
   # SETUP
@@ -52,9 +52,9 @@ services:
   # pelias-schema sets up Elasticsearch indices properly for Pelias
   # https://github.com/pelias/pelias/#database
   schema:
-    image: ${PELIAS_SCHEMA}
+    image: ${PELIAS_SCHEMA:?}
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
 
   #
   # SERVICES
@@ -65,12 +65,12 @@ services:
   # This is the core of Pelias. It talks to all other services (if available), Elasticsearch, and provides the interface for all queries to Pelias.
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   api:
-    image: ${PELIAS_API}
+    image: ${PELIAS_API:?}
     restart: unless-stopped
     environment: [ "PORT=4000" ]
     ports: [ "0.0.0.0:4000:4000" ]
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -82,7 +82,7 @@ services:
   #
   # GIF demonstration on parsing a full address input: https://github.com/openvenues/libpostal#examples-of-parsing
   libpostal:
-    image: ${PELIAS_LIBPOSTAL}
+    image: ${PELIAS_LIBPOSTAL:?}
     restart: unless-stopped
     ports: [ "127.0.0.1:4400:4400" ]
 
@@ -95,13 +95,13 @@ services:
   # Configuration: `PLACEHOLDER_DATA` - Path to the directory where the placeholder service will find the `store.sqlite3` database file.
   # https://github.com/pelias/placeholder#configuration-via-environment-variables
   placeholder:
-    image: ${PELIAS_PLACEHOLDER}
+    image: ${PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
     environment: [ "PORT=4100" ]
     ports: [ "127.0.0.1:4100:4100" ]
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   # https://github.com/pelias/interpolation
   #
@@ -114,13 +114,13 @@ services:
   # The data is split into 2 different sqlite3 databases: street.db and address.db
   # https://github.com/pelias/interpolation#architecture
   interpolation:
-    image: ${PELIAS_INTERPOLATION}
+    image: ${PELIAS_INTERPOLATION:?}
     restart: unless-stopped
     environment: [ "PORT=4300" ]
     ports: [ "127.0.0.1:4300:4300" ]
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   # https://github.com/pelias/pip-service
   #
@@ -130,23 +130,23 @@ services:
   # It will look for Who's on First data in the place configured in `pelias.json`.
   # https://github.com/pelias/pip-service#usage
   pip:
-    image: ${PELIAS_PIP}
+    image: ${PELIAS_PIP:?}
     restart: unless-stopped
     environment: [ "PORT=4200" ]
     ports: [ "127.0.0.1:4200:4200" ]
     volumes:
-      - "${PELIAS_BUILD_DIR}/pelias.json:/code/pelias.json"
-      - "${PELIAS_BUILD_DIR}/data:/data"
+      - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
 
   # The underlying datastore that does most of the query heavy-lifting and powers our search results. We use Elasticsearch. Currently, versions 6 and 7 are supported.
   # https://github.com/pelias/pelias/#database
   elasticsearch:
-    image: ${PELIAS_ELASTICSEARCH}
+    image: ${PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
     ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     volumes:
-      - "${PELIAS_BUILD_DIR}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
-      - "${PELIAS_BUILD_DIR}/data/elasticsearch:/usr/share/elasticsearch/data"
+      - "${PELIAS_BUILD_DIR:?}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+      - "${PELIAS_BUILD_DIR:?}/data/elasticsearch:/usr/share/elasticsearch/data"
     ulimits:
       memlock:
         soft: -1

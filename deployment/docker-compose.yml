@@ -14,12 +14,12 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${TILESERVER_GL}
+    image: ${TILESERVER_GL:?}
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 8080
-      VIRTUAL_HOST: "${TILESERVER_GL_DOMAIN}"
-      LETSENCRYPT_HOST: "${TILESERVER_GL_DOMAIN}"
+      VIRTUAL_HOST: ${TILESERVER_GL_DOMAIN:?}
+      LETSENCRYPT_HOST: ${TILESERVER_GL_DOMAIN:?}
     networks:
       - proxy
 
@@ -33,12 +33,12 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${OPENTRIPPLANNER}
+    image: ${OPENTRIPPLANNER:?}
     restart: unless-stopped
     environment:
       - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=${OPENTRIPPLANNER_DOMAIN}
-      - LETSENCRYPT_HOST=${OPENTRIPPLANNER_DOMAIN}
+      - VIRTUAL_HOST=${OPENTRIPPLANNER_DOMAIN:?}
+      - LETSENCRYPT_HOST=${OPENTRIPPLANNER_DOMAIN:?}
     networks:
       - proxy
 
@@ -52,13 +52,13 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_API}
+    image: ${PELIAS_API:?}
     restart: unless-stopped
     environment:
       - PORT=4000
       - VIRTUAL_PORT=4000
-      - VIRTUAL_HOST=${API_DOMAIN}
-      - LETSENCRYPT_HOST=${API_DOMAIN}
+      - VIRTUAL_HOST=${API_DOMAIN:?}
+      - LETSENCRYPT_HOST=${API_DOMAIN:?}
     networks:
       - proxy
       - pelias
@@ -80,7 +80,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_LIBPOSTAL}
+    image: ${PELIAS_LIBPOSTAL:?}
     restart: unless-stopped
     networks:
       - pelias
@@ -91,7 +91,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_PLACEHOLDER}
+    image: ${PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
     environment: [ "PORT=4100" ]
     networks:
@@ -103,7 +103,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_INTERPOLATION}
+    image: ${PELIAS_INTERPOLATION:?}
     restart: unless-stopped
     environment: [ "PORT=4300" ]
     networks:
@@ -115,7 +115,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_PIP}
+    image: ${PELIAS_PIP:?}
     restart: unless-stopped
     environment: [ "PORT=4200" ]
     networks:
@@ -127,7 +127,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_ELASTICSEARCH}
+    image: ${PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
     ulimits:
       memlock:
@@ -152,15 +152,15 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${DIGITRANSIT_UI}
+    image: ${DIGITRANSIT_UI:?}
     environment:
       CONFIG: btp
-      OTP_URL: https://${OPENTRIPPLANNER_DOMAIN}/otp/routers/default/
-      GEOCODING_BASE_URL: https://${API_DOMAIN}/v1
-      DEFAULT_MAP_URL: https://${TILESERVER_GL_DOMAIN}/styles/bicycle/
+      OTP_URL: https://${OPENTRIPPLANNER_DOMAIN:?}/otp/routers/default/
+      GEOCODING_BASE_URL: https://${API_DOMAIN:?}/v1
+      DEFAULT_MAP_URL: https://${TILESERVER_GL_DOMAIN:?}/styles/bicycle/
       VIRTUAL_PORT: 8080
-      VIRTUAL_HOST: ${DIGITRANSIT_UI_DOMAIN}
-      LETSENCRYPT_HOST: ${DIGITRANSIT_UI_DOMAIN}
+      VIRTUAL_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
+      LETSENCRYPT_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
     networks:
       - proxy
     depends_on:
@@ -235,7 +235,7 @@ services:
     image: nginxproxy/acme-companion
     restart: unless-stopped
     environment:
-      - DEFAULT_EMAIL=${LETS_ENCRYPT_NOTIFICATION_EMAIL}
+      - DEFAULT_EMAIL=${LETS_ENCRYPT_NOTIFICATION_EMAIL:?}
     volumes:
       - ./private/conf.d:/etc/nginx/conf.d
       - ./private/vhost.d:/etc/nginx/vhost.d

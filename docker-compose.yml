@@ -1,6 +1,6 @@
 version: '3.9'
 # https://docs.docker.com/compose/compose-file/#name-top-level-element
-name: ${NAME}
+name: ${NAME:?}
 networks:
   proxy:
   pelias:
