@@ -1,6 +1,8 @@
 ARG PELIAS_API=pelias/api:master
 FROM ${PELIAS_API}
 COPY ./pelias.json /code/pelias.json
+ARG PORT=4000
+ENV PORT=${PORT}
 
 COPY ./check-health.sh /bin/check-health
 ARG HEALTHCHECK_REQUEST

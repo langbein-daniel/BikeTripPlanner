@@ -1,5 +1,7 @@
 ARG PELIAS_LIBPOSTAL=pelias/libpostal-service
 FROM ${PELIAS_LIBPOSTAL}
+ARG PORT=4400
+ENV PORT=${PORT}
 
 COPY ./check-health.sh /bin/check-health
 ARG HEALTHCHECK_REQUEST

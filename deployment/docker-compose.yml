@@ -55,7 +55,6 @@ services:
     image: ${PELIAS_API:?}
     restart: unless-stopped
     environment:
-      - PORT=4000
       - VIRTUAL_PORT=4000
       - VIRTUAL_HOST=${API_DOMAIN:?}
       - LETSENCRYPT_HOST=${API_DOMAIN:?}
@@ -93,7 +92,6 @@ services:
         max-file: '1'
     image: ${PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
-    environment: [ "PORT=4100" ]
     networks:
       - pelias
 
@@ -105,7 +103,6 @@ services:
         max-file: '1'
     image: ${PELIAS_INTERPOLATION:?}
     restart: unless-stopped
-    environment: [ "PORT=4300" ]
     networks:
       - pelias
 
@@ -117,7 +114,6 @@ services:
         max-file: '1'
     image: ${PELIAS_PIP:?}
     restart: unless-stopped
-    environment: [ "PORT=4200" ]
     networks:
       - pelias
 
@@ -155,6 +151,7 @@ services:
     image: ${DIGITRANSIT_UI:?}
     environment:
       CONFIG: btp
+      OTP_TIMEOUT: 100000
       OTP_URL: https://${OPENTRIPPLANNER_DOMAIN:?}/otp/routers/default/
       GEOCODING_BASE_URL: https://${API_DOMAIN:?}/v1
       DEFAULT_MAP_URL: https://${TILESERVER_GL_DOMAIN:?}/styles/bicycle/
@@ -253,7 +250,7 @@ services:
   #
   # PERIODICALLY DELETE LOG FILES
   #
-  # They might contain personal information such as IP addresses.
+  # They contain personal information such as IP addresses.
   #
 
   docker_cron_logging:

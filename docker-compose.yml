@@ -62,9 +62,8 @@ services:
         - PELIAS_API=${PELIAS_API:?}
         - HEALTHCHECK_REQUEST=${HEALTHCHECK_API_REQUEST:?}
         - HEALTHCHECK_RESPONSE=${HEALTHCHECK_API_RESPONSE:?}
+        - PORT=4000
     restart: unless-stopped
-    environment:
-      - PORT=4000
     ports: [ "0.0.0.0:4000:4000/tcp" ]
     networks:
       - proxy
@@ -95,6 +94,7 @@ services:
         - PELIAS_LIBPOSTAL=${PELIAS_LIBPOSTAL:?}
         - HEALTHCHECK_REQUEST=${HEALTHCHECK_LIBPOSTAL_REQUEST:?}
         - HEALTHCHECK_RESPONSE=${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
+        - PORT=4400
     restart: unless-stopped
 #    ports: [ "127.0.0.1:4400:4400" ]
     networks:
@@ -116,8 +116,8 @@ services:
         - PELIAS_PLACEHOLDER=${PELIAS_PLACEHOLDER:?}
         - HEALTHCHECK_REQUEST=${HEALTHCHECK_PLACEHOLDER_REQUEST:?}
         - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PLACEHOLDER_RESPONSE:?}
+        - PORT=4100
     restart: unless-stopped
-    environment: [ "PORT=4100" ]
 #    ports: [ "127.0.0.1:4100:4100" ]
     networks:
       - pelias
@@ -140,8 +140,8 @@ services:
         - PELIAS_INTERPOLATION=${PELIAS_INTERPOLATION:?}
         - HEALTHCHECK_REQUEST=${HEALTHCHECK_INTERPOLATION_REQUEST:?}
         - HEALTHCHECK_RESPONSE=${HEALTHCHECK_INTERPOLATION_RESPONSE:?}
+        - PORT=4300
     restart: unless-stopped
-    environment: [ "PORT=4300" ]
 #    ports: [ "127.0.0.1:4300:4300" ]
     networks:
       - pelias
@@ -161,8 +161,8 @@ services:
         - PELIAS_PIP=${PELIAS_PIP:?}
         - HEALTHCHECK_REQUEST=${HEALTHCHECK_PIP_REQUEST:?}
         - HEALTHCHECK_RESPONSE=${HEALTHCHECK_PIP_RESPONSE:?}
+        - PORT=4200
     restart: unless-stopped
-    environment: [ "PORT=4200" ]
 #    ports: [ "127.0.0.1:4200:4200" ]
     networks:
       - pelias
@@ -200,6 +200,7 @@ services:
       context: github.com/langbein-daniel/digitransit-ui
     environment:
       CONFIG: btp
+      OTP_TIMEOUT: 100000
       OTP_URL: http://localhost:8080/otp/routers/default/
       GEOCODING_BASE_URL: http://localhost:4000/v1
       DEFAULT_MAP_URL: http://localhost:7070/styles/bicycle/

@@ -1,5 +1,7 @@
 ARG PELIAS_PLACEHOLDER=pelias/placeholder:master
 FROM ${PELIAS_PLACEHOLDER}
+ARG PORT=4100
+ENV PORT=${PORT}
 COPY ./pelias.json /code/pelias.json
 COPY ./data/placeholder/store.sqlite3 /data/placeholder/store.sqlite3
 
