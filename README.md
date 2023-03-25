@@ -68,6 +68,10 @@ sudo docker compose build opentripplanner
 # Set shell variables from `.env`.
 export "$(grep '^BUILD_NAME=' < .env)"
 export "$(grep '^PELIAS_BUILD_DIR=' < .env)"
+export "$(grep '^COUNTRY_CODE=' < .env)"
+# Set countryCode value in pelias.json file.
+pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
+jq ". | .imports.whosonfirst.countryCode=\"${COUNTRY_CODE}\"" <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
 # Create temporary Pelias data directory.
 mkdir -p "${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 # Start Elasticsearch and wait until healthy.

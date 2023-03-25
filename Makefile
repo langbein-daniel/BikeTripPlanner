@@ -14,7 +14,7 @@ build: clean
 	if [ "$${GTFS_URL}" = "https://www.vgn.de/opendata/GTFS.zip" ]; then \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data-raw; \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) gtfs-data; \
-  	else \
+	else \
 	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data; \
 	fi
 	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
@@ -22,6 +22,11 @@ build: clean
 
 	export "$$(grep '^BUILD_NAME=' < .env)"
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
+	export "$$(grep '^COUNTRY_CODE=' < .env)"
+
+	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
+	jq ". | .imports.whosonfirst.countryCode=\"$${COUNTRY_CODE}\"" <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"
+
 	mkdir -p "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 	sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 	sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
