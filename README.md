@@ -16,6 +16,8 @@ Important parts are:
 - Link to OpenStreetMap region covering the bounding box
 - Link to GTFS feed providing transit data
 
+In addition to the default configuration for the area of the VGN transport association, there is a `.env` file for [Finland](examples/finnland/.env). Just overwrite [.env](.env) with it to give it a try.
+
 ## Build data images
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
