@@ -11,6 +11,11 @@ VGN is available at [https://biketripplanner.privacy1st.de/](https://biketrippla
 
 Go through [.env](.env) and adjust the values as desired.
 
+Important parts are:
+- Bounding box describing a geographical area
+- Link to OpenStreetMap region covering the bounding box
+- Link to GTFS feed providing transit data
+
 ## Build data images
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
