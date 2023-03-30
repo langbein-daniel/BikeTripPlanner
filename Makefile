@@ -9,7 +9,7 @@ DOCKER_BUILD_ARGS := --progress=plain
 all: build
 
 .PHONY: build
-build: clean
+build: clean  ## Build BikeTripPlanner Docker images
 	export "$$(grep '^GTFS_URL=' < .env)"
 	if [ "$${GTFS_URL}" = "https://www.vgn.de/opendata/GTFS.zip" ]; then \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data-raw; \
@@ -46,6 +46,14 @@ build: clean
 	sudo docker compose -f build-pelias.yml down
 
 	sudo docker compose build $(DOCKER_BUILD_ARGS)
+
+.PHONY: start  ## (Re-)Start the local BikeTripPlanner instance
+start: stop
+	sudo docker compose up -d --wait
+
+.PHONY: stop  ## Stop the local BikeTripPlanner instance
+stop:
+	sudo docker compose down
 
 .PHONY: clean
 clean:
