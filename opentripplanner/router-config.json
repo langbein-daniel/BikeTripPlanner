@@ -1,0 +1,10 @@
+{
+  "streetRoutingTimeout": "5s",
+
+  "transit": {
+    "maxNumberOfTransfers": 20,
+    "dynamicSearchWindow": {
+      "maxWinTimeMinutes": 900
+    }
+  }
+}

@@ -7,8 +7,9 @@ FROM docker.io/opentripplanner/opentripplanner:latest
 # Running `sudo docker run --rm --entrypoint cat docker.io/opentripplanner/opentripplanner:latest /docker-entrypoint.sh` reveals:
 #   java $JAVA_OPTS -cp @/app/jib-classpath-file @/app/jib-main-class-file /var/opentripplanner/ $@
 
-COPY ./build-config.json /var/opentripplanner/
-COPY ./otp-config.json /var/opentripplanner/
+COPY ./build-config.json  /var/opentripplanner/
+COPY ./otp-config.json    /var/opentripplanner/
+COPY ./router-config.json /var/opentripplanner/
 
 # Build street graph.
 # Results in `streetGraph.obj`.
