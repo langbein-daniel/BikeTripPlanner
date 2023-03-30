@@ -36,9 +36,9 @@ services:
     image: ${OPENTRIPPLANNER:?}
     restart: unless-stopped
     environment:
-      - VIRTUAL_PORT=8080
-      - VIRTUAL_HOST=${OPENTRIPPLANNER_DOMAIN:?}
-      - LETSENCRYPT_HOST=${OPENTRIPPLANNER_DOMAIN:?}
+      VIRTUAL_PORT: 8080
+      VIRTUAL_HOST: ${OPENTRIPPLANNER_DOMAIN:?}
+      LETSENCRYPT_HOST: ${OPENTRIPPLANNER_DOMAIN:?}
     networks:
       - proxy
 
@@ -55,9 +55,9 @@ services:
     image: ${PELIAS_API:?}
     restart: unless-stopped
     environment:
-      - VIRTUAL_PORT=4000
-      - VIRTUAL_HOST=${API_DOMAIN:?}
-      - LETSENCRYPT_HOST=${API_DOMAIN:?}
+      VIRTUAL_PORT: 4000
+      VIRTUAL_HOST: ${API_DOMAIN:?}
+      LETSENCRYPT_HOST: ${API_DOMAIN:?}
     networks:
       - proxy
       - pelias
@@ -150,11 +150,6 @@ services:
         max-file: '1'
     image: ${DIGITRANSIT_UI:?}
     environment:
-      CONFIG: btp
-      OTP_TIMEOUT: 100000
-      OTP_URL: https://${OPENTRIPPLANNER_DOMAIN:?}/otp/routers/default/
-      GEOCODING_BASE_URL: https://${API_DOMAIN:?}/v1
-      DEFAULT_MAP_URL: https://${TILESERVER_GL_DOMAIN:?}/styles/bicycle/
       VIRTUAL_PORT: 8080
       VIRTUAL_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
       LETSENCRYPT_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
@@ -232,7 +227,7 @@ services:
     image: nginxproxy/acme-companion
     restart: unless-stopped
     environment:
-      - DEFAULT_EMAIL=${LETS_ENCRYPT_NOTIFICATION_EMAIL:?}
+      DEFAULT_EMAIL: ${LETS_ENCRYPT_NOTIFICATION_EMAIL:?}
     volumes:
       - ./private/conf.d:/etc/nginx/conf.d
       - ./private/vhost.d:/etc/nginx/vhost.d
