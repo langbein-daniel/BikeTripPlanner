@@ -27,7 +27,8 @@ build: clean
 	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
 	jq ". | .imports.whosonfirst.countryCode=\"$${COUNTRY_CODE}\"" <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"
 
-	mkdir -p "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
+	sudo install --directory -m755 -o1000 -g1000 "$${PELIAS_BUILD_DIR}/data/" "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
+
 	sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 	sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
