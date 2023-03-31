@@ -18,8 +18,8 @@ services:
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 8080
-      VIRTUAL_HOST: ${TILESERVER_GL_DOMAIN:?}
-      LETSENCRYPT_HOST: ${TILESERVER_GL_DOMAIN:?}
+      VIRTUAL_HOST: ${DOMAIN_TILESERVER_GL:?}
+      LETSENCRYPT_HOST: ${DOMAIN_TILESERVER_GL:?}
     networks:
       - proxy
 
@@ -37,8 +37,8 @@ services:
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 8080
-      VIRTUAL_HOST: ${OPENTRIPPLANNER_DOMAIN:?}
-      LETSENCRYPT_HOST: ${OPENTRIPPLANNER_DOMAIN:?}
+      VIRTUAL_HOST: ${DOMAIN_OPENTRIPPLANNER:?}
+      LETSENCRYPT_HOST: ${DOMAIN_OPENTRIPPLANNER:?}
     networks:
       - proxy
 
@@ -56,8 +56,8 @@ services:
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 4000
-      VIRTUAL_HOST: ${API_DOMAIN:?}
-      LETSENCRYPT_HOST: ${API_DOMAIN:?}
+      VIRTUAL_HOST: ${DOMAIN_API:?}
+      LETSENCRYPT_HOST: ${DOMAIN_API:?}
     networks:
       - proxy
       - pelias
@@ -151,8 +151,8 @@ services:
     image: ${IMAGE_DIGITRANSIT_UI:?}
     environment:
       VIRTUAL_PORT: 8080
-      VIRTUAL_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
-      LETSENCRYPT_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
+      VIRTUAL_HOST: ${DOMAIN_DIGITRANSIT_UI:?}
+      LETSENCRYPT_HOST: ${DOMAIN_DIGITRANSIT_UI:?}
     networks:
       - proxy
     depends_on:
