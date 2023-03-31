@@ -14,7 +14,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${TILESERVER_GL:?}
+    image: ${IMAGE_TILESERVER_GL:?}
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 8080
@@ -33,7 +33,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${OPENTRIPPLANNER:?}
+    image: ${IMAGE_OPENTRIPPLANNER:?}
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 8080
@@ -52,7 +52,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_API:?}
+    image: ${IMAGE_PELIAS_API:?}
     restart: unless-stopped
     environment:
       VIRTUAL_PORT: 4000
@@ -79,7 +79,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_LIBPOSTAL:?}
+    image: ${IMAGE_PELIAS_LIBPOSTAL:?}
     restart: unless-stopped
     networks:
       - pelias
@@ -90,7 +90,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_PLACEHOLDER:?}
+    image: ${IMAGE_PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
     networks:
       - pelias
@@ -101,7 +101,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_INTERPOLATION:?}
+    image: ${IMAGE_PELIAS_INTERPOLATION:?}
     restart: unless-stopped
     networks:
       - pelias
@@ -112,7 +112,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_PIP:?}
+    image: ${IMAGE_PELIAS_PIP:?}
     restart: unless-stopped
     networks:
       - pelias
@@ -123,7 +123,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${PELIAS_ELASTICSEARCH:?}
+    image: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
     ulimits:
       memlock:
@@ -148,7 +148,7 @@ services:
       options:
         max-size: '10m'
         max-file: '1'
-    image: ${DIGITRANSIT_UI:?}
+    image: ${IMAGE_DIGITRANSIT_UI:?}
     environment:
       VIRTUAL_PORT: 8080
       VIRTUAL_HOST: ${DIGITRANSIT_UI_DOMAIN:?}
