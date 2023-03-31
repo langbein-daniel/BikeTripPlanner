@@ -114,7 +114,7 @@ services:
   # The data is split into 2 different sqlite3 databases: street.db and address.db
   # https://github.com/pelias/interpolation#architecture
   interpolation:
-    image: ${PELIAS_INTERPOLATION:?}
+    image: ${IMAGE_PELIAS_INTERPOLATION:?}
     restart: unless-stopped
     environment: [ "PORT=4300" ]
     ports: [ "127.0.0.1:4300:4300" ]

@@ -1,5 +1,5 @@
-ARG PELIAS_INTERPOLATION=pelias/interpolation:master
-FROM ${PELIAS_INTERPOLATION}
+ARG IMAGE_PELIAS_INTERPOLATION=pelias/interpolation:master
+FROM ${IMAGE_PELIAS_INTERPOLATION}
 ARG PORT=4300
 ENV PORT=${PORT}
 COPY ./pelias.json /code/pelias.json
