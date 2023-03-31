@@ -130,7 +130,7 @@ services:
   # It will look for Who's on First data in the place configured in `pelias.json`.
   # https://github.com/pelias/pip-service#usage
   pip:
-    image: ${PELIAS_PIP:?}
+    image: ${IMAGE_PELIAS_PIP:?}
     restart: unless-stopped
     environment: [ "PORT=4200" ]
     ports: [ "127.0.0.1:4200:4200" ]

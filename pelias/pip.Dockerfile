@@ -1,5 +1,5 @@
-ARG PELIAS_PIP=pelias/pip-service:master
-FROM ${PELIAS_PIP}
+ARG IMAGE_PELIAS_PIP=pelias/pip-service:master
+FROM ${IMAGE_PELIAS_PIP}
 ARG PORT=4200
 ENV PORT=${PORT}
 COPY ./pelias.json /code/pelias.json
