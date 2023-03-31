@@ -95,7 +95,7 @@ services:
   # Configuration: `PLACEHOLDER_DATA` - Path to the directory where the placeholder service will find the `store.sqlite3` database file.
   # https://github.com/pelias/placeholder#configuration-via-environment-variables
   placeholder:
-    image: ${PELIAS_PLACEHOLDER:?}
+    image: ${IMAGE_PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
     environment: [ "PORT=4100" ]
     ports: [ "127.0.0.1:4100:4100" ]
