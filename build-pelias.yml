@@ -11,7 +11,7 @@ services:
   # The main OSM importer, pelias/openstreetmap, handles venues and addresses.
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   openstreetmap:
-    image: ${PELIAS_OPENSTREETMAP:?}
+    image: ${IMAGE_PELIAS_OPENSTREETMAP:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"
@@ -21,7 +21,7 @@ services:
   # The pelias/polylines OSM importer handles streets, since dealing with line geometry is a special challenge.
   # https://github.com/pelias/documentation/blob/master/data-sources.md#openstreetmap
   polylines:
-    image: ${PELIAS_POLYLINES:?}
+    image: ${IMAGE_PELIAS_POLYLINES:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"
@@ -29,7 +29,7 @@ services:
   # Supports importing admin areas and venues from Who's on First
   # https://github.com/pelias/pelias/#data-importers
   whosonfirst:
-    image: ${PELIAS_WHOSONFIRST:?}
+    image: ${IMAGE_PELIAS_WHOSONFIRST:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"
@@ -52,7 +52,7 @@ services:
   # pelias-schema sets up Elasticsearch indices properly for Pelias
   # https://github.com/pelias/pelias/#database
   schema:
-    image: ${PELIAS_SCHEMA:?}
+    image: ${IMAGE_PELIAS_SCHEMA:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
 
