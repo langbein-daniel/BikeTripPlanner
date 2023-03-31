@@ -36,6 +36,7 @@ services:
     build:
       context: opentripplanner
       args:
+        IMAGE_OPENTRIPPLANNER: ${IMAGE_OPENTRIPPLANNER:?}
         BUILD_NAME: ${BUILD_NAME:?}
         JAVA_BUILD_OPTS: ${JAVA_BUILD_OPTS:?}
         JAVA_OPTS: ${JAVA_OPTS:?}
