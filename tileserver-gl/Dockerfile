@@ -1,4 +1,5 @@
 ARG BUILD_NAME=build
+ARG IMAGE_TILESERVER_GL=maptiler/tileserver-gl
 
 # ADD GIT-URL is not yet stable Dockerfile syntax. Thus, we install and clone with git manually.
 # https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir
@@ -50,5 +51,5 @@ RUN make \
   && rm data-tileserver-gl/.data-unnamed \
   && make clean
 
-FROM maptiler/tileserver-gl
+FROM ${IMAGE_TILESERVER_GL}
 COPY --from=tilemaker /data/data-tileserver-gl /data

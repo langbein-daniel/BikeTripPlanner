@@ -14,7 +14,8 @@ services:
     build:
       context: tileserver-gl
       args:
-        # Name of the built `osm-excerpt` image.
+        IMAGE_TILESERVER_GL: ${IMAGE_TILESERVER_GL:?}
+        # Used to determine name of `osm-excerpt` image.
         BUILD_NAME: ${BUILD_NAME:?}
         MAP_STYLE_URL: ${MAP_STYLE_URL:?}
         REGION_URL: ${OSM_PBF_URL:?}
@@ -37,6 +38,7 @@ services:
       context: opentripplanner
       args:
         IMAGE_OPENTRIPPLANNER: ${IMAGE_OPENTRIPPLANNER:?}
+        # Used to determine name of `osm-excerpt` and `gtfs-data` images.
         BUILD_NAME: ${BUILD_NAME:?}
         JAVA_BUILD_OPTS: ${JAVA_BUILD_OPTS:?}
         JAVA_OPTS: ${JAVA_OPTS:?}
@@ -198,7 +200,7 @@ services:
   digitransit-ui:
     build:
       # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
-      context: github.com/langbein-daniel/digitransit-ui
+      context: ${DOCKERFILE_DIGITRANSIT_UI:?}
       args:
         CONFIG: btp
         OTP_TIMEOUT: 100000
