@@ -13,7 +13,7 @@ services:
       args:
         - GTFS_URL=${GTFS_URL:?}
 
-  # Download OSM region and cut with bounding-box.
+  # Download OSM region and cut with bounding box.
   osm-excerpt:
     build:
       context: ./osm-excerpt
