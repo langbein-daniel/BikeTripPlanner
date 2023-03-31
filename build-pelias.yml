@@ -38,7 +38,7 @@ services:
     build:
       context: ${PELIAS_BUILD_DIR:?}/gtfs
       args:
-        - PELIAS_GTFS_URL=${PELIAS_GTFS_URL:?}
+        - DOCKERFILE_PELIAS_GTFS=${DOCKERFILE_PELIAS_GTFS:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"

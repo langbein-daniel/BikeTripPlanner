@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y git unzip python python-pip python-dev 
 ENV WORKDIR /code/pelias/gtfs
 WORKDIR ${WORKDIR}
 
-ARG PELIAS_GTFS_URL=https://github.com/HSLdevcom/pelias-gtfs
-RUN git clone --single-branch ${PELIAS_GTFS_URL} ${WORKDIR}
+ARG DOCKERFILE_PELIAS_GTFS=https://github.com/HSLdevcom/pelias-gtfs
+RUN git clone --single-branch ${DOCKERFILE_PELIAS_GTFS} ${WORKDIR}
 RUN npm install
 
 # add local code
