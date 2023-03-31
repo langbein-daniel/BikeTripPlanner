@@ -82,7 +82,7 @@ services:
   #
   # GIF demonstration on parsing a full address input: https://github.com/openvenues/libpostal#examples-of-parsing
   libpostal:
-    image: ${PELIAS_LIBPOSTAL:?}
+    image: ${IMAGE_PELIAS_LIBPOSTAL:?}
     restart: unless-stopped
     ports: [ "127.0.0.1:4400:4400" ]
 

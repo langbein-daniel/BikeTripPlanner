@@ -92,7 +92,7 @@ services:
       context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./libpostal.Dockerfile
       args:
-        PELIAS_LIBPOSTAL: ${PELIAS_LIBPOSTAL:?}
+        IMAGE_PELIAS_LIBPOSTAL: ${IMAGE_PELIAS_LIBPOSTAL:?}
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_LIBPOSTAL_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
         PORT: 4400
