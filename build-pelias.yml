@@ -141,7 +141,7 @@ services:
   # The underlying datastore that does most of the query heavy-lifting and powers our search results. We use Elasticsearch. Currently, versions 6 and 7 are supported.
   # https://github.com/pelias/pelias/#database
   elasticsearch:
-    image: ${PELIAS_ELASTICSEARCH:?}
+    image: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
     ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     volumes:

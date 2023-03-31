@@ -175,7 +175,7 @@ services:
       context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./elasticsearch.Dockerfile
       args:
-        PELIAS_ELASTICSEARCH: ${PELIAS_ELASTICSEARCH:?}
+        IMAGE_PELIAS_ELASTICSEARCH: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
 #    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
     ulimits:
