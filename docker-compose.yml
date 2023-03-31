@@ -60,7 +60,7 @@ services:
       context: ${PELIAS_BUILD_DIR:?}
       dockerfile: ./api.Dockerfile
       args:
-        PELIAS_API: ${PELIAS_API:?}
+        IMAGE_PELIAS_API: ${IMAGE_PELIAS_API:?}
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_API_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_API_RESPONSE:?}
         PORT: 4000

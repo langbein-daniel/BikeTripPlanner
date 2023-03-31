@@ -1,5 +1,5 @@
-ARG PELIAS_API=pelias/api:master
-FROM ${PELIAS_API}
+ARG IMAGE_PELIAS_API=pelias/api:master
+FROM ${IMAGE_PELIAS_API}
 COPY ./pelias.json /code/pelias.json
 ARG PORT=4000
 ENV PORT=${PORT}

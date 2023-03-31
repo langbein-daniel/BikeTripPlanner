@@ -65,7 +65,7 @@ services:
   # This is the core of Pelias. It talks to all other services (if available), Elasticsearch, and provides the interface for all queries to Pelias.
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   api:
-    image: ${PELIAS_API:?}
+    image: ${IMAGE_PELIAS_API:?}
     restart: unless-stopped
     environment: [ "PORT=4000" ]
     ports: [ "0.0.0.0:4000:4000" ]
