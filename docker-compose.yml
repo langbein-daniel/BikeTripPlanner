@@ -25,7 +25,7 @@ services:
         MAX_LAT: ${MAX_LAT:?}
     restart: unless-stopped
     ports:
-      - '7070:8080/tcp'
+      - '127.0.0.1:7070:8080/tcp'
     networks:
       - proxy
 
@@ -45,7 +45,7 @@ services:
         HEALTHCHECK_AGENCY_NAME: ${HEALTHCHECK_OPENTRIPPLANNER:?}
     restart: unless-stopped
     ports:
-      - '8080:8080/tcp'
+      - '127.0.0.1:8080:8080/tcp'
     networks:
       - proxy
 
@@ -67,7 +67,7 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_API_RESPONSE:?}
         PORT: 4000
     restart: unless-stopped
-    ports: [ "0.0.0.0:4000:4000/tcp" ]
+    ports: [ '127.0.0.1:4000:4000/tcp' ]
     networks:
       - proxy
       - pelias
@@ -99,7 +99,7 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
         PORT: 4400
     restart: unless-stopped
-#    ports: [ "127.0.0.1:4400:4400" ]
+#    ports: [ '127.0.0.1:4400:4400/tcp' ]
     networks:
       - pelias
 
@@ -121,7 +121,7 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PLACEHOLDER_RESPONSE:?}
         PORT: 4100
     restart: unless-stopped
-#    ports: [ "127.0.0.1:4100:4100" ]
+#    ports: [ '127.0.0.1:4100:4100/tcp' ]
     networks:
       - pelias
 
@@ -145,7 +145,7 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_INTERPOLATION_RESPONSE:?}
         PORT: 4300
     restart: unless-stopped
-#    ports: [ "127.0.0.1:4300:4300" ]
+#    ports: [ '127.0.0.1:4300:4300/tcp' ]
     networks:
       - pelias
 
@@ -166,7 +166,7 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PIP_RESPONSE:?}
         PORT: 4200
     restart: unless-stopped
-#    ports: [ "127.0.0.1:4200:4200" ]
+#    ports: [ '127.0.0.1:4200:4200/tcp' ]
     networks:
       - pelias
 
@@ -179,7 +179,7 @@ services:
       args:
         IMAGE_PELIAS_ELASTICSEARCH: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
-#    ports: [ "127.0.0.1:9200:9200", "127.0.0.1:9300:9300" ]
+#    ports: [ '127.0.0.1:9200:9200/tcp', '127.0.0.1:9300:9300/tcp' ]
     ulimits:
       memlock:
         soft: -1
@@ -212,7 +212,7 @@ services:
         MIN_LAT: ${MIN_LAT:?}
         MAX_LAT: ${MAX_LAT:?}
     ports:
-      - '9090:8080/tcp'
+      - '127.0.0.1:9090:8080/tcp'
     networks:
       - proxy
     depends_on:
