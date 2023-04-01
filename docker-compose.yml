@@ -203,7 +203,7 @@ services:
       context: ${DOCKERFILE_DIGITRANSIT_UI:?}
       args:
         CONFIG: btp
-        OTP_TIMEOUT: 100000
+        OTP_TIMEOUT: ${OTP_TIMEOUT:?}
         OTP_URL: http://localhost:8080/otp/routers/default/
         GEOCODING_BASE_URL: http://localhost:4000/v1
         DEFAULT_MAP_URL: http://localhost:7070/styles/bicycle/
