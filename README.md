@@ -116,7 +116,13 @@ Start all services and wait for them to be healthy:
 sudo docker compose up -d --wait
 ```
 
-### Verify healthcheck output
+Open http://localhost:9090 and test if searching for addresses and places works.
+
+Test if navigation works:
+
+* For the VGN, open e.g. http://localhost:9090/reitti/Erlangen%3A%3A49.596018%2C11.001793/N%C3%BCrnberg%20Hbf%3A%3A49.446369%2C11.081806
+
+### View healthcheck output
 
 * https://docs.docker.com/engine/reference/builder/#healthcheck
 
