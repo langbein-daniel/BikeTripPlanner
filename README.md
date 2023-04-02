@@ -26,13 +26,13 @@ TLDR: Just run `make` to build all Docker images.
 
 ### GTFS data
 
-If the GTFS data set is valid and contains bicycle information, run the following:
+If the GTFS data set is valid and needs no further processing, run the following:
 
 ```shell
 sudo docker compose -f build-data.yml build --pull gtfs-data
 ```
 
-If you need to modify the GTFS data first, then have a look at the following example instead:
+Or else if you need to modify the GTFS data, add another build step:
 
 * The GTFS zip file from the VGN does not contain the `bikes_allowed` column and some values of the CSV files are not properly quoted/escaped.
 * We want to modify the GTFS data first before creating the `gtfs-data` image.

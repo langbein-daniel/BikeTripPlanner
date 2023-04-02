@@ -12,6 +12,7 @@ services:
   # Modify GTFS zip file.
   gtfs-data:
     build:
-      context: github.com/langbein-daniel/vgn-gtfs-modification
+      context: github.com/langbein-daniel/gtfs-modifications
       args:
         - BUILD_NAME=${BUILD_NAME:?}
+        - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM:?}
