@@ -211,6 +211,7 @@ services:
         MAX_LON: ${MAX_LON:?}
         MIN_LAT: ${MIN_LAT:?}
         MAX_LAT: ${MAX_LAT:?}
+        MIN_ZOOM: ${MIN_ZOOM:?}
     ports:
       - '127.0.0.1:9090:8080/tcp'
     networks:
