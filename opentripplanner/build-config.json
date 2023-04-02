@@ -1,10 +1,67 @@
+// This configuration is based
+// on the Finland configuration
+// of HSL:
+// https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/v3/router-finland/build-config.json
 {
+  // Generate nice HTML report of Graph errors/warnings.
+  "dataImportReport": true,
+  // OTP attempts to calculate a path straight through an OSM area using the shortest way rather than around the edge of it.
   "areaVisibility": true,
-
+  // Whether we should create bike P+R stations from OSM data.
   "staticBikeParkAndRide": true,
+  // Whether we should create car P+R stations from OSM data.
+  "staticParkAndRide": true,
+  // Visibility calculations for an area will not be done if there are more nodes than this limit.
+  "maxAreaNodes": 10000,
+  // Transfers up to this duration with the default walk speed value will be pre-calculated and included in the Graph.
+  "maxTransferDurationSeconds": 3600,
+  // This field is used for mapping routes geometry shapes. It determines max distance between shape points and their stop sequence. If mapper cannot find any stops within this radius it will default to simple stop-to-stop geometry instead.
+  "maxStopToShapeSnapDistance": 300,
+  // TODO: add DEM file
+  "multiThreadElevationCalculations": true,
+  // Limit the import of transit services to the given START date.
+  // Default value: "-P1Y"
+  "transitServiceStart": "-P2W",
+  // Limit the import of transit services to the given end date.
+  "transitServiceEnd": "P3M",
+  // TODO: Are all times correct without this?
+  // "transitModelTimeZone": "Europe/Helsinki",
+  // https://docs.opentripplanner.org/en/dev-2.x/sandbox/Fares/#fares-configuration
+  // By default OTP will compute fares according to the GTFS specification if fare data is provided in your GTFS input.
+  // One can disable this by setting "off".
+  // For more complex scenarios or to handle vehicle rental fares, it is necessary to manually configure fares. You can combine different fares (for example transit and vehicle-rental) by defining a combinationStrategy parameter, and a list of sub-fares to combine.
+  // TODO: Remove Digitransit-UI tweak and check for server errors
+  // TODO: Set to "hsl"
+  "fares": "off",
+  // Routing requests to use for pre-calculating stop-to-stop transfers.
   "transferRequests": [
     {
-      "modes": "TRANSIT,BICYCLE_PARK"
+      "modes": "WALK"
+    },
+    {
+      "modes": "BICYCLE"
     }
-  ]
+  ],
+  // https://docs.opentripplanner.org/en/dev-2.x/BoardingLocations/#cross-referencing
+  // What OSM tags should be looked on for the source of matching stops to platforms and stops.
+  // Germany: ["ref", "ref:IFOPT"]
+  // Finland: ["ref", "ref:findt", "ref:findr"]
+  "boardingLocationTags": [
+    "ref",
+    "ref:IFOPT",
+    "ref:findt",
+    "ref:findr"
+  ],
+  "osmDefaults": {
+    // The timezone used to resolve opening hours in OSM data.
+    // TODO: Opening hours are not visible to the user?
+    // "timeZone": "Europe/Helsinki",
+    // The named set of mapping rules applied when parsing OSM tags.
+    // default | norway | uk | finland | germany | atlanta | houston | portland
+    "osmTagMapping": "germany"
+  },
+  // TODO: add DEM file
+  "demDefaults": {
+    "elevationUnitMultiplier": 0.1
+  }
 }

@@ -18,6 +18,10 @@ Important parts are:
 
 In addition to the default configuration for the area of the VGN transport association, there is a `.env` file for [Finland](examples/finnland/.env). Just overwrite [.env](.env) with it to give it a try.
 
+For advanced configuration, see:
+- [opentripplanner/README.md](opentripplanner/README.md)
+- [pelias/pelias.json](pelias/pelias.json)
+
 ## Build data images
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
