@@ -6,6 +6,8 @@
 
 > Options and parameters that are taken into account during the graph building process will be "baked into" the graph, and cannot be changed later in a running server. These are specified in `build-config.json`.
 
+For a more light-weight (as in smaller graph and requires less RAM) version, replace with [build-config-lightweight.json](build-config-lightweight.json).
+
 ## [router-config.json](router-config.json)
 
 > Other details of OTP operation can be modified without rebuilding the graph. These run-time configuration options are found in `router-config.json`.

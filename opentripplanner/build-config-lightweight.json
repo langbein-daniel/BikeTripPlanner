@@ -1,0 +1,21 @@
+{
+  "areaVisibility": true,
+  "staticBikeParkAndRide": true,
+  "maxAreaNodes": 10000,
+  "maxTransferDurationSeconds": 3600,
+  "maxStopToShapeSnapDistance": 300,
+  "transitServiceStart": "-P2W",
+  "transitServiceEnd": "P3M",
+  "fares": "off",
+  "transferRequests": [
+  ],
+  "boardingLocationTags": [
+    "ref",
+    "ref:IFOPT",
+    "ref:findt",
+    "ref:findr"
+  ],
+  "osmDefaults": {
+    "osmTagMapping": "germany"
+  }
+}
