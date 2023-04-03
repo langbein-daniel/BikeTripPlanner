@@ -1,5 +1,15 @@
+// This configuration is based
+// on the Finland configuration
+// of HSL:
+// https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/v3/router-finland/otp-config.json
+
+// Overview over OTP features:
+// https://docs.opentripplanner.org/en/dev-2.x/Configuration/#otp-features
+
 {
   "otpFeatures" : {
+    // https://docs.opentripplanner.org/en/dev-2.x/sandbox/LegacyGraphQLApi
+    // This is a copy of HSL's GraphQL API used by the Digitransit project. The API is used to run OTP2 together with the digitransit-ui.
     "SandboxAPILegacyGraphQLApi": true,
     // https://docs.opentripplanner.org/en/dev-2.x/sandbox/MapboxVectorTilesApi/
     // This API produces Mapbox vector tiles, which are used by eg. Digitransit-ui to show information about public transit entities on the map.
@@ -7,6 +17,26 @@
     // If one wishes to disable this, set to false here,
     // remove vectorTileLayers from router-config.json and
     // disable map.showLayerSelector in Digitransit-UI.
-    "SandboxAPIMapboxVectorTilesApi": true
+    "SandboxAPIMapboxVectorTilesApi": true,
+
+    // Whether the @async annotation in the GraphQL schema should lead to the fetch being executed asynchronously. This allows batch or alias queries to run in parallel at the cost of consuming extra threads.
+    "AsyncGraphQLFetchers": true,
+
+    // Enable the inspector endpoint for graph information for inspection/debugging purpose.
+    // This results in e.g. the "Bike safety" layer in the OTP debug UI.
+    "APIGraphInspectorTile": true,
+    // Available at http://localhost:8080/otp
+    "APIServerInfo": true,
+    // Enable endpoint for graph updaters status.
+    // The GraphUpdater interface is e.g. implemented by GtfsRealtimeAlertsUpdater.
+    // If no real time updaes are configured, this can be disabled.
+    "APIUpdaterStatus": false,
+
+    // Enable the bike rental endpoint.
+    "APIBikeRental": false,
+    // Floating bike routing.
+    // A rented floating bike or scooter can be dropped off at any street.
+    // https://github.com/opentripplanner/OpenTripPlanner/pull/3370
+    "FloatingBike": false,
   }
 }

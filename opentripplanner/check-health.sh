@@ -10,3 +10,9 @@ printf '%s' "${response}" | grep --fixed-strings "\"name\":\"${HEALTHCHECK_AGENC
   printf '%s\n%s\n' "Unexpected response:" "${response}"
   exit 1
 }
+
+# https://docs.opentripplanner.org/en/dev-2.x/sandbox/ActuatorAPI/
+# Alternatively, use the Actuator API:
+# - Checks if graph is loaded and all updaters are ready
+# - (Might be) faster than requesting a list of all agencies
+# - Does not detect if wrong area is loaded ...

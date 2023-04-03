@@ -2,6 +2,7 @@
 // on the Finland configuration
 // of HSL:
 // https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/v3/router-finland/build-config.json
+
 {
   // Generate nice HTML report of Graph errors/warnings.
   // "dataImportReport": true,
