@@ -10,6 +10,8 @@ FROM ${IMAGE_OPENTRIPPLANNER}
 #   java $JAVA_OPTS -cp @/app/jib-classpath-file @/app/jib-main-class-file /var/opentripplanner/ $@
 
 COPY ./build-config.json  /var/opentripplanner/
+# otp-config.json contains settings relevant during graph creation
+COPY ./otp-config.json    /var/opentripplanner/
 
 # Build street graph.
 # Results in `streetGraph.obj`.
@@ -27,7 +29,6 @@ RUN /docker-entrypoint.sh --loadStreet --save \
     && rm /var/opentripplanner/streetGraph.obj
 
 COPY ./router-config.json /var/opentripplanner/
-COPY ./otp-config.json    /var/opentripplanner/
 
 ARG JAVA_OPTS
 ENV JAVA_OPTS ${JAVA_OPTS}
