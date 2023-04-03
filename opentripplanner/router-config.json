@@ -1,10 +1,23 @@
-{
-  "streetRoutingTimeout": "5s",
+// The sane defaults values should be fine for us.
+// TODO:
+//   Maybe have another look at the HSL configuration?
+//   https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/v3/router-finland/router-config.json
 
+{
+  // The maximum time a street routing request is allowed to take before returning a timeout.
+  "streetRoutingTimeout": "8s",
+
+  // Configuration for transit searches with RAPTOR.
+  // Values are taken from https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/8a33185b10ee764867f112726b83b314f05c0c7e/router-waltti/router-config.json#L37
   "transit": {
-    "maxNumberOfTransfers": 20,
     "dynamicSearchWindow": {
-      "maxWinTimeMinutes": 900
+      "minTransitTimeCoefficient" : 2.5,
+      "minWaitTimeCoefficient": 0.5,
+
+      "minWindow" : "1h",
+      // This is the parameter that affects the response time most, the downside is that a search is only guaranteed to be pareto-optimal within a search-window.
+      // Default: 5h
+      "maxWindow" : "24h"
     }
   },
 

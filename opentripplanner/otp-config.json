@@ -37,6 +37,6 @@
     // Floating bike routing.
     // A rented floating bike or scooter can be dropped off at any street.
     // https://github.com/opentripplanner/OpenTripPlanner/pull/3370
-    "FloatingBike": false,
+    "FloatingBike": false
   }
 }
