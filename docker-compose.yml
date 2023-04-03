@@ -207,6 +207,7 @@ services:
         OTP_URL: http://localhost:8080/otp/routers/default/
         GEOCODING_BASE_URL: http://localhost:4000/v1
         DEFAULT_MAP_URL: http://localhost:7070/styles/bicycle/
+        STOP_MAP_URL: http://localhost:8080/otp/routers/default/vectorTiles/stops,stations/
         MIN_LON: ${MIN_LON:?}
         MAX_LON: ${MAX_LON:?}
         MIN_LAT: ${MIN_LAT:?}

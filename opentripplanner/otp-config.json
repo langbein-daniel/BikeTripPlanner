@@ -1,6 +1,12 @@
 {
   "otpFeatures" : {
     "SandboxAPILegacyGraphQLApi": true,
+    // https://docs.opentripplanner.org/en/dev-2.x/sandbox/MapboxVectorTilesApi/
+    // This API produces Mapbox vector tiles, which are used by eg. Digitransit-ui to show information about public transit entities on the map.
+    //
+    // If one wishes to disable this, set to false here,
+    // remove vectorTileLayers from router-config.json and
+    // disable map.showLayerSelector in Digitransit-UI.
     "SandboxAPIMapboxVectorTilesApi": true
   }
 }

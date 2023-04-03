@@ -6,5 +6,26 @@
     "dynamicSearchWindow": {
       "maxWinTimeMinutes": 900
     }
-  }
+  },
+
+  // See otp-config.json SandboxAPIMapboxVectorTilesApi
+  "vectorTileLayers": [
+    {
+      "name": "stops",
+      "type": "Stop",
+      // describes the mapper converting the properties from the OTP model entities to the vector tile properties
+      "mapper": "Digitransit",
+      "maxZoom": 20,
+      "minZoom": 14,
+      "cacheMaxSeconds": 600
+    },
+    {
+      "name": "stations",
+      "type": "Station",
+      "mapper": "Digitransit",
+      "maxZoom": 20,
+      "minZoom": 12,
+      "cacheMaxSeconds": 600
+    }
+  ]
 }
