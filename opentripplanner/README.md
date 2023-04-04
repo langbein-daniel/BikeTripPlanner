@@ -1,6 +1,7 @@
 # OpenTripPlanner configuration
 
-* https://docs.opentripplanner.org/en/dev-2.x/Configuration/#three-scopes-of-configuration
+* The OTP config files: https://docs.opentripplanner.org/en/dev-2.x/Configuration/#three-scopes-of-configuration
+* OTP config examples: https://github.com/opentripplanner/OpenTripPlanner/tree/dev-2.x/docs/examples
 
 ## [build-config.json](build-config.json)
 
