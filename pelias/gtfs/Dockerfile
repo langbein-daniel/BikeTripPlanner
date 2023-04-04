@@ -9,7 +9,7 @@ FROM pelias/baseimage
 RUN apt-get update && apt-get install -y git unzip python python-pip python-dev build-essential gdal-bin rlwrap procps emacs curl && rm -rf /var/lib/apt/lists/*
 
 # change working dir
-ENV WORKDIR /code/pelias/gtfs
+ENV WORKDIR=/code/pelias/gtfs
 WORKDIR ${WORKDIR}
 
 ARG DOCKERFILE_PELIAS_GTFS=https://github.com/HSLdevcom/pelias-gtfs
