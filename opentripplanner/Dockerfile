@@ -4,7 +4,7 @@ ARG IMAGE_OPENTRIPPLANNER=docker.io/opentripplanner/opentripplanner:latest
 FROM ${BUILD_NAME}-osm-excerpt AS osm
 FROM ${BUILD_NAME}-gtfs-data AS gtfs
 
-FROM ${IMAGE_OPENTRIPPLANNER}
+FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Current entrypoint: /docker-entrypoint.sh
 # Running `sudo docker run --rm --entrypoint cat docker.io/opentripplanner/opentripplanner:latest /docker-entrypoint.sh` reveals:
 #   java $JAVA_OPTS -cp @/app/jib-classpath-file @/app/jib-main-class-file /var/opentripplanner/ $@
@@ -17,7 +17,7 @@ COPY ./otp-config.json    /var/opentripplanner/
 # Results in `streetGraph.obj`.
 COPY --from=osm /data/extract.osm.pbf /var/opentripplanner/extract.osm.pbf
 ARG JAVA_BUILD_OPTS
-ENV JAVA_OPTS ${JAVA_BUILD_OPTS}
+ENV JAVA_OPTS=${JAVA_BUILD_OPTS}
 RUN /docker-entrypoint.sh --buildStreet \
     && rm /var/opentripplanner/extract.osm.pbf
 
@@ -28,10 +28,15 @@ RUN /docker-entrypoint.sh --loadStreet --save \
     && rm /var/opentripplanner/gtfs.zip \
     && rm /var/opentripplanner/streetGraph.obj
 
-COPY ./router-config.json /var/opentripplanner/
+FROM ${IMAGE_OPENTRIPPLANNER}
+
+COPY --from=builder /var/opentripplanner/build-config.json /var/opentripplanner/build-config.json
+COPY --from=builder /var/opentripplanner/otp-config.json   /var/opentripplanner/otp-config.json
+COPY --from=builder /var/opentripplanner/graph.obj         /var/opentripplanner/graph.obj
+COPY ./router-config.json                                  /var/opentripplanner/router-config.json
 
 ARG JAVA_OPTS
-ENV JAVA_OPTS ${JAVA_OPTS}
+ENV JAVA_OPTS=${JAVA_OPTS}
 CMD ["--load", "--serve"]
 
 COPY ./check-health.sh /bin/check-health
