@@ -150,6 +150,11 @@ services:
         max-file: '1'
     image: ${IMAGE_DIGITRANSIT_UI:?}
     environment:
+      OTP_URL: https://${DOMAIN_OPENTRIPPLANNER:?}/otp/routers/default/
+      GEOCODING_BASE_URL: https://${DOMAIN_API:?}/v1
+      DEFAULT_MAP_URL: https://${DOMAIN_TILESERVER_GL:?}/styles/bicycle/
+      STOP_MAP_URL: https://${DOMAIN_OPENTRIPPLANNER:?}/otp/routers/default/vectorTiles/stops,stations/
+      #
       VIRTUAL_PORT: 8080
       VIRTUAL_HOST: ${DOMAIN_DIGITRANSIT_UI:?}
       LETSENCRYPT_HOST: ${DOMAIN_DIGITRANSIT_UI:?}
