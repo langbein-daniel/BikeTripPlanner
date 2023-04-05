@@ -55,8 +55,9 @@
   ],
   "osmDefaults": {
     // The timezone used to resolve opening hours in OSM data.
-    // TODO: Opening hours are not visible to the user?
-    // "timeZone": "Europe/Helsinki",
+    // If this is not specified, the following warning is printed during build:
+    //   WARN (OpenStreetMapProvider.java:134) Missing time zone for OSM source file - time-restricted entities will not be created
+    "timeZone": "Europe/Berlin",
     // The named set of mapping rules applied when parsing OSM tags.
     // default | norway | uk | finland | germany | atlanta | houston | portland
     "osmTagMapping": "germany"
@@ -65,4 +66,12 @@
   "demDefaults": {
     "elevationUnitMultiplier": 0.1
   }
+
+//  "transitFeeds": [
+//    {
+//      "type": "gtfs",
+//      "source": "gtfs.zip",
+//      "feedId": "1"
+//    }
+//  ]
 }
