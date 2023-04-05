@@ -64,6 +64,13 @@ sudo docker compose build tileserver-gl
 ### Routing (OpenTripPlanner)
 
 ```shell
+# Set shell variables from `.env`.
+export "$(grep '^TIMEZONE=' < .env)"
+# Change `timeZone` in build-config.json file.
+# Store build-config.json without line comments in build_config_json variable.
+build_config_json="$(sed 's|^\s*//.*||' opentripplanner/build-config.json)"
+jq ". | .osmDefaults.timeZone=\"${TIMEZONE}\"" <<< "${build_config_json}" > opentripplanner/build-config.json
+# Build final OpenTripPlanner container.
 # Don't `--pull` as we are using the previously built `osm-excerpt`.
 sudo docker compose build opentripplanner
 ```
@@ -75,7 +82,7 @@ sudo docker compose build opentripplanner
 export "$(grep '^BUILD_NAME=' < .env)"
 export "$(grep '^PELIAS_BUILD_DIR=' < .env)"
 export "$(grep '^COUNTRY_CODE=' < .env)"
-# Set countryCode value in pelias.json file.
+# Change `countryCode` in pelias.json file.
 pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
 jq ". | .imports.whosonfirst.countryCode=\"${COUNTRY_CODE}\"" <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
 # Create temporary Pelias data directory.
@@ -148,13 +155,15 @@ sudo docker compose down
 
 ### Publish images
 
-Tag and push the locally built images to a docker container registry.
+Tag and push the locally built images to a docker container registry:
 
 ```shell
 ./publish.sh
 ```
 
 ### Example deployment with Let's Encrypt certificates
+
+
 
 ```shell
 cd deployment

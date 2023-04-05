@@ -20,6 +20,10 @@ build: clean  ## Build BikeTripPlanner Docker images
 	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
 	sudo docker compose -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
 
+	export "$$(grep '^TIMEZONE=' < .env)"
+	build_config_json="$$(sed 's|^\s*//.*||' opentripplanner/build-config.json)"
+	jq ". | .osmDefaults.timeZone=\"$${TIMEZONE}\"" <<< "$${build_config_json}" > opentripplanner/build-config.json
+
 	export "$$(grep '^BUILD_NAME=' < .env)"
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
 	export "$$(grep '^COUNTRY_CODE=' < .env)"
