@@ -3,7 +3,7 @@
 Get your journey-planner instance up and running with Docker Compose.
 
 A demo instance covering the area of the German transport association
-VGN is available at [https://biketripplanner.privacy1st.de/](https://biketripplanner.privacy1st.de/).
+VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
 
 ![nuremberg-bike-and-ride.png](screenshot-nuremberg-bike-and-ride.png)
 
@@ -111,7 +111,7 @@ sudo docker compose build api libpostal placeholder interpolation pip elasticsea
 #sudo rm -r "${PELIAS_BUILD_DIR}/data"
 ```
 
-### Web UI (Digitransit)
+### Web UI (Digitransit-UI)
 
 ```shell
 sudo docker compose build --pull digitransit-ui
@@ -163,7 +163,7 @@ Tag and push the locally built images to a docker container registry:
 
 ### Example deployment with Let's Encrypt certificates
 
-
+In [deployment/.env](deployment/.env), one has to specify one domain and three subdomains that point to the server running the following command:
 
 ```shell
 cd deployment
