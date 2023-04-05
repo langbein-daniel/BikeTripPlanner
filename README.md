@@ -20,7 +20,7 @@ In addition to the default configuration for the area of the VGN transport assoc
 
 For advanced configuration, see:
 - [opentripplanner/README.md](opentripplanner/README.md)
-- [pelias/pelias.json](pelias/pelias.json)
+- [pelias/README.md](pelias/README.md)
 
 ## Build data images
 
