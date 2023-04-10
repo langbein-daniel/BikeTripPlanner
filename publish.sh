@@ -3,7 +3,13 @@ set -e
 set -u
 
 function main(){
-  # Note: One has to login first:
+  # Tags and publishes the images
+  # of all services described in
+  # docker-compose.yml to Docker Hub.
+  #
+  # Note: One has to build the docker
+  # images first and log into ones Docker
+  # Hub account:
   #   sudo docker login --username <REPOSITORY-USERNAME>
 
   # Print help if first argument is -h or --help.
