@@ -233,6 +233,7 @@ services:
       context: ${DOCKERFILE_DIGITRANSIT_UI:?}
       args:
         CONFIG: btp
+        TIMEZONE: ${TIMEZONE:?}
         OTP_TIMEOUT: ${OTP_TIMEOUT:?}
         MIN_LON: ${MIN_LON:?}
         MAX_LON: ${MAX_LON:?}
