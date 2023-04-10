@@ -82,9 +82,19 @@ sudo docker compose build opentripplanner
 export "$(grep '^BUILD_NAME=' < .env)"
 export "$(grep '^PELIAS_BUILD_DIR=' < .env)"
 export "$(grep '^COUNTRY_CODE=' < .env)"
+export "$(grep '^WOF_IDS=' < .env)"
 # Change `countryCode` in pelias.json file.
 pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
-jq ". | .imports.whosonfirst.countryCode=\"${COUNTRY_CODE}\"" <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+if [ "${COUNTRY_CODE}" = "" ]; then
+  # Delete `countryCode`
+  jq 'del(.imports.whosonfirst.countryCode)' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+else
+  # Set `countryCode`
+  jq ". | .imports.whosonfirst.countryCode=\"${COUNTRY_CODE}\"" <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+fi
+# Change `importPlace` in pelias.json file.
+pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
+jq --argjson wof_ids "${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$wof_ids' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
 # Create temporary Pelias data directory.
 mkdir -p "${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 # Start Elasticsearch and wait until healthy.

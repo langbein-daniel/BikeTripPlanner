@@ -27,9 +27,17 @@ build: clean  ## Build BikeTripPlanner Docker images
 	export "$$(grep '^BUILD_NAME=' < .env)"
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
 	export "$$(grep '^COUNTRY_CODE=' < .env)"
+	export "$$(grep '^WOF_IDS=' < .env)"
 
 	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
-	jq ". | .imports.whosonfirst.countryCode=\"$${COUNTRY_CODE}\"" <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"
+	if [ "${COUNTRY_CODE}" = "" ]; then \
+	  jq 'del(.imports.whosonfirst.countryCode)' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"; \
+	else \
+	  jq ". | .imports.whosonfirst.countryCode=\"$${COUNTRY_CODE}\"" <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"; \
+	fi
+
+	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
+	jq --argjson wof_ids "$${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$$wof_ids' <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"
 
 	sudo install --directory -m755 -o1000 -g1000 "$${PELIAS_BUILD_DIR}/data/" "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 
