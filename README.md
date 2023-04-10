@@ -94,7 +94,13 @@ else
 fi
 # Change `importPlace` in pelias.json file.
 pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
-jq --argjson wof_ids "${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$wof_ids' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+if [ "${WOF_IDS}" = "" ]; then
+  # Delete `importPlace`
+  jq 'del(.imports.whosonfirst.importPlace)' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+else
+  # Set `importPlace`
+  jq --argjson wof_ids "${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$wof_ids' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
+fi
 # Create temporary Pelias data directory.
 mkdir -p "${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 # Start Elasticsearch and wait until healthy.

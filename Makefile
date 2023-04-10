@@ -37,7 +37,11 @@ build: clean  ## Build BikeTripPlanner Docker images
 	fi
 
 	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
-	jq --argjson wof_ids "$${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$$wof_ids' <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"
+	if [ "$${WOF_IDS}" = "" ]; then \
+	  jq 'del(.imports.whosonfirst.importPlace)' <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"; \
+	else \
+	  jq --argjson wof_ids "$${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$$wof_ids' <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"; \
+	fi
 
 	sudo install --directory -m755 -o1000 -g1000 "$${PELIAS_BUILD_DIR}/data/" "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 
