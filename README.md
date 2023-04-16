@@ -177,11 +177,79 @@ Tag and push the locally built images to a docker container registry:
 ./publish.sh
 ```
 
-### Example deployment with Let's Encrypt certificates
+### Run with Docker Compose
 
-In [deployment/.env](deployment/.env), one has to specify one domain and three subdomains that point to the server running the following command:
+In [deployment](deployment), there are two Docker Compose examples.
+
+#### Nginx reverse proxy with Let's Encrypt certificates
+
+This example includes an nginx server that receives HTTPS requests from the Internet and proxies them to the corresponding services via HTTP. Certificate creation and renewal is automated using Let's Encrypt.
+
+```
+                                       Docker Compose
+                               ┌──────────────────────────────┐
+                               │                              │
+┌─────────┐                    │            ┌─►Pelias API     │
+│         │HTTPS          HTTPS│        HTTP│                 │
+│ Client◄─┼─────►Internet◄─────┼─►nginx◄────┼─►Digitransit-UI │
+│         │                    │            │                 │
+└─────────┘                    │            └─►Tileserver GL  │
+                               │                              │
+                               └──────────────────────────────┘
+```
+
+Create one domain for the UI and three subdomains for the background map, geocoder and routing services. All four domains have to point to the server intended for running BikeTripPlanner. Also, make sure that the ports 80 and 443 are opened and reachable over the Internet.
+
+Set the domain values in [deployment/.env](deployment/.env) accordingly.
+
+Then start your BikeTripPlanner instance with:
 
 ```shell
 cd deployment
-sudo docker compose up -d --wait
+sudo docker compose -f with-https-proxy.yml up -d --wait
 ```
+
+#### Load distribution
+
+As the Pelias and OpenTripPlanner services are quite RAM and CPU intensive, one might want to run some of the Docker containers on different servers to spread the load or even introduce load balancing of e.g. routing requests over multiple OpenTripPlanner instances.
+
+This second example gives an overview how the large Docker Compose project can be split up into smaller parts, each of which run on a different server.
+
+Separating the background map, routing, geocoding and UI services is as easy as copying the corresponding services from the [deployment/with-https-proxy.yml](deployment/with-https-proxy.yml) Docker Compose file into separate files and removing the `depends_on` statements of services that are no longer part of the same Docker Compose file. It is thereafter the users responsibility to start the Docker Compose projects in the correct order (e.g. starting the UI project last).
+
+As we want to keep this example simple, we leave it up to the user which of the services named above they want to separate and keep them all in one Docker Compose project. But we lay the foundation to fine granular load distribution and load balancing by introducing a dedicated reverse proxy server which removes the CPU load of encrypting and decrypting HTTPS connections away from the BikeTripPlanner services.
+
+```
+                                                  Docker Compose
+                                              ┌───────────────────┐
+                              Docker Compose  │                   │
+┌─────────┐                    ┌─────────┐    │ ┌─►Pelias API     │
+│         │HTTPS          HTTPS│         │HTTP│ │                 │
+│ Client◄─┼─────►Internet◄─────┼─►nginx◄─┼────┼─┼─►Digitransit-UI │
+│         │                    │         │    │ │                 │
+└─────────┘                    └─────────┘    │ └─►Tileserver GL  │
+                                              │                   │
+                                              └───────────────────┘
+```
+
+Create one domain for the UI and three subdomains for the background map, geocoder and routing services. All four domains have to point to the server intended for running the reverse proxy. Also, make sure that the ports 80 and 443 are open and reachable over the Internet on that server.
+
+Set the domain values in [deployment/.env](deployment/.env) accordingly.
+
+Set the correct IP of the BikeTripPlanner server in all 4 nginx config files in [deployment/conf](deployment/conf). (If you run e.g. OpenTripPlanner separately from the other BikeTripPlanner services, then set the IP in [deployment/conf/otp.conf](deployment/conf/otp.conf) to your OpenTripPlanner server.)
+
+On your reverse proxy server:
+
+```shell
+cd deployment
+sudo docker compose -f proxy-only.yml up -d --wait
+```
+
+On your BikeTripPlanner server:
+
+```shell
+cd deployment
+sudo docker compose -f btp-only.yml up -d --wait
+```
+
+**Notes**: Ideally, there would be just one nginx Docker container proxying incoming requests. But as the Docker images we are using in the first example to handle nginx configuration generation as well as certificate management are not intended for forwarding requests to separate machines, we added 4 additional nginx containers with custom nginx configuration files. While this introduces some overhead, it allows us to use a setup close to the first example. Again, this second example is just intended to an idea on how to distribute load over multiple servers.

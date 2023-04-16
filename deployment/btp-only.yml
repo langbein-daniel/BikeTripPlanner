@@ -1,0 +1,178 @@
+version: '3.9'
+networks:
+  proxy:
+  pelias:
+services:
+
+  #
+  # BACKGROUND MAP
+  #
+
+  tileserver-gl:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_TILESERVER_GL:?}
+    restart: unless-stopped
+    ports:
+      - '7070:8080'
+    networks:
+      - proxy
+
+  #
+  # ROUTING
+  #
+
+  opentripplanner:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_OPENTRIPPLANNER:?}
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    networks:
+      - proxy
+
+  #
+  # GEOCODER
+  #
+
+  api:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_API:?}
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    networks:
+      - proxy
+      - pelias
+    depends_on:
+      libpostal:
+        condition: service_healthy
+      placeholder:
+        condition: service_healthy
+      interpolation:
+        condition: service_healthy
+      pip:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
+  libpostal:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_LIBPOSTAL:?}
+    restart: unless-stopped
+    networks:
+      - pelias
+
+  placeholder:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_PLACEHOLDER:?}
+    restart: unless-stopped
+    networks:
+      - pelias
+
+  interpolation:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_INTERPOLATION:?}
+    restart: unless-stopped
+    networks:
+      - pelias
+
+  pip:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_PIP:?}
+    restart: unless-stopped
+    networks:
+      - pelias
+
+  elasticsearch:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_PELIAS_ELASTICSEARCH:?}
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add: [ "IPC_LOCK" ]
+    security_opt:
+      - seccomp=unconfined
+    networks:
+      - pelias
+
+  #
+  # WEB UI
+  #
+
+  digitransit-ui:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
+    image: ${IMAGE_DIGITRANSIT_UI:?}
+    environment:
+      OTP_URL: https://${DOMAIN_OPENTRIPPLANNER:?}/otp/routers/default/
+      GEOCODING_BASE_URL: https://${DOMAIN_API:?}/v1
+      DEFAULT_MAP_URL: https://${DOMAIN_TILESERVER_GL:?}/styles/bicycle/
+      STOP_MAP_URL: https://${DOMAIN_OPENTRIPPLANNER:?}/otp/routers/default/vectorTiles/stops,stations/
+    ports:
+      - '9090:8080'
+    networks:
+      - proxy
+    depends_on:
+      tileserver-gl:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+      opentripplanner:
+        condition: service_healthy
+
+  #
+  # PERIODICALLY DELETE LOG FILES
+  #
+  # They contain personal information such as IP addresses.
+  #
+
+  docker_cron_logging:
+    image: busybox
+    volumes:
+      - /mnt/data/docker/containers:/docker-containers
+    # Daily at 04:30: Truncate docker logfiles.
+    command: >
+      sh -c "
+      mkdir -p /var/spool/cron/crontabs/
+      && echo '30 4 * * * truncate -s 0 /docker-containers/*/*-json.log > /proc/1/fd/1 2>/proc/1/fd/2' > /var/spool/cron/crontabs/root
+      && crond -f -d 8"
