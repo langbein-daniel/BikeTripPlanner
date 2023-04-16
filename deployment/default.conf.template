@@ -1,0 +1,28 @@
+server {
+    server_name ${DOMAIN_TILESERVER_GL};
+    listen 80;
+    location / {
+        proxy_pass http://${IP_TILESERVER_GL}:7070;
+    }
+}
+server {
+    server_name ${DOMAIN_OPENTRIPPLANNER};
+    listen 80;
+    location / {
+        proxy_pass http://${IP_OPENTRIPPLANNER}:8080;
+    }
+}
+server {
+    server_name ${DOMAIN_API};
+    listen 80;
+    location / {
+        proxy_pass http://${IP_API}:4000;
+    }
+}
+server {
+    server_name ${DOMAIN_DIGITRANSIT_UI};
+    listen 80;
+    location / {
+        proxy_pass http://${IP_DIGITRANSIT_UI}:9090;
+    }
+}
