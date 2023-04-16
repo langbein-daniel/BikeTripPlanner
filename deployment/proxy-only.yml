@@ -8,6 +8,11 @@ services:
   #
 
   btp-proxy:
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '1'
     image: nginx:stable-alpine
     environment:
       - DOMAIN_TILESERVER_GL=${DOMAIN_TILESERVER_GL:?}
