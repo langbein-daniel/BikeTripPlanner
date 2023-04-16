@@ -1,4 +1,9 @@
+// https://docs.opentripplanner.org/en/v2.2.0/RouterConfiguration
+//
 // The sane defaults values should be fine for us.
+// However, we increased the search range and timeouts
+// to handle national wide searches in the Finland example.
+//
 // TODO:
 //   Maybe have another look at the HSL configuration?
 //   https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/v3/router-finland/router-config.json
@@ -9,6 +14,8 @@
 
   // Configuration for transit searches with RAPTOR.
   // Values are taken from https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/8a33185b10ee764867f112726b83b314f05c0c7e/router-waltti/router-config.json#L37
+  //
+  // There are no timeouts for the transit part of the routing search, instead configure a reasonable dynamic search-window.
   "transit": {
     "dynamicSearchWindow": {
       "minTransitTimeCoefficient" : 2.5,
