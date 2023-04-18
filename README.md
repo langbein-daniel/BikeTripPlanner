@@ -208,7 +208,7 @@ Then start your BikeTripPlanner instance with:
 
 ```shell
 cd deployment
-sudo docker compose -f with-https-proxy.yml up -d --wait
+sudo docker compose -f btp-and-proxy.yml up -d --wait
 ```
 
 #### Load distribution
@@ -217,7 +217,7 @@ As the Pelias and OpenTripPlanner services are quite RAM and CPU intensive, one 
 
 This second example gives an overview how the large Docker Compose project can be split up into smaller parts, each of which run on a different server.
 
-Separating the background map, routing, geocoding and UI services is as easy as copying the corresponding services from the [deployment/with-https-proxy.yml](deployment/with-https-proxy.yml) Docker Compose file into separate files and removing the `depends_on` statements of services that are no longer part of the same Docker Compose file. It is thereafter the users responsibility to start the Docker Compose projects in the correct order (e.g. starting the UI project last).
+Separating the background map, routing, geocoding and UI services is as easy as copying the corresponding services from the [deployment/btp-and-proxy.yml](deployment/btp-and-proxy.yml) Docker Compose file into separate files and removing the `depends_on` statements of services that are no longer part of the same Docker Compose file. It is thereafter the users responsibility to start the Docker Compose projects in the correct order (e.g. starting the UI project last).
 
 As we want to keep this example simple, we leave it up to the user which of the services named above they want to separate and keep them all in one Docker Compose project. But we lay the foundation to fine granular load distribution and load balancing by introducing a dedicated reverse proxy server which removes the CPU load of encrypting and decrypting HTTPS connections away from the BikeTripPlanner services.
 
