@@ -9,9 +9,9 @@ services:
   tilemaker:
     build:
       # Build a Docker image containing the `tilemaker` command.
+      # As of 2023-05-08, `tilemaker` is not yet available in `debian:stable-slim`.
       #
-      # Using `FROM <git-url> as <name>` inside the Dockerfile of the tileserver-gl service below is not (yet) possible.
+      # Using `FROM <git-URL> as <name>` inside the Dockerfile of the tileserver-gl service below is not (yet) possible.
       # Thus, we build the image separately.
-      #
       # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
       context: github.com/systemed/tilemaker

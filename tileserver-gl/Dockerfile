@@ -1,7 +1,8 @@
 ARG BUILD_NAME=build
 ARG IMAGE_TILESERVER_GL=maptiler/tileserver-gl
 
-# ADD GIT-URL is not yet stable Dockerfile syntax. Thus, we install and clone with git manually.
+# "ADD <git-URL>" is not yet stable Dockerfile syntax.
+# Thus, we install and clone with git manually.
 # https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir
 FROM debian:stable-slim AS map-style
 # https://hub.docker.com/_/debian/
@@ -31,6 +32,9 @@ WORKDIR /data
 COPY --from=map-style /data .
 COPY --from=sprites /build build/sprites
 COPY --from=osm /data/extract.osm.pbf build/unnamed/extract.osm.pbf
+# We have the target area already available.
+# By creating an empty region file,
+# we avoid that the Makefile downloads the whole region and extracts the area again.
 ARG REGION_URL=https://download.geofabrik.de/europe/germany-latest.osm.pbf
 RUN mkdir -p download \
     && touch "download/$(basename ${REGION_URL})" \
