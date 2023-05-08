@@ -64,12 +64,14 @@ sudo docker compose build tileserver-gl
 ### Routing (OpenTripPlanner)
 
 ```shell
+# Adjust configuration. TODO: Move this into OTP Dockerfile and make this data pipeline step just one `docker compose build` command.
 # Set shell variables from `.env`.
 export "$(grep '^TIMEZONE=' < .env)"
 # Change `timeZone` in build-config.json file.
 # Store build-config.json without line comments in build_config_json variable.
 build_config_json="$(sed 's|^\s*//.*||' opentripplanner/build-config.json)"
 jq ". | .osmDefaults.timeZone=\"${TIMEZONE}\"" <<< "${build_config_json}" > opentripplanner/build-config.json
+
 # Build final OpenTripPlanner container.
 # Don't `--pull` as we are using the previously built `osm-excerpt`.
 sudo docker compose build opentripplanner
