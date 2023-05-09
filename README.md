@@ -12,9 +12,10 @@ VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
 Go through [.env](.env) and adjust the values as desired.
 
 Important parts are:
-- Bounding box describing a rectangular geographical area
-- Link to OpenStreetMap region covering the bounding box
-- Link to GTFS feed providing transit data
+- Bounding box describing a rectangular geographical area.
+- Link to OpenStreetMap region covering the bounding box.
+- Link to GTFS feed providing transit data.
+- Requests to the individual services that are used for Docker container healthchecks. If the OpenStreetMap or GTFS data sources are changed, these need to be adjusted as well.
 
 In addition to the default configuration for the area of the VGN transport association, there is a `.env` file for [Finland](examples/finnland/.env). Just overwrite [.env](.env) with it to give it a try.
 
@@ -23,6 +24,8 @@ For advanced configuration, see:
 - [pelias/README.md](pelias/README.md)
 
 ## Build data images
+
+Prerequisites: Install Docker Compose, `jq`, `sudo` and optionally `make`.
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
 
