@@ -13,8 +13,8 @@ all: build
 
 .PHONY: build
 build: clean  ## Build BikeTripPlanner Docker images
-	export "$$(grep '^GTFS_URL=' < .env)"
-	if [ "$${GTFS_URL}" = "https://www.vgn.de/opendata/GTFS.zip" ] || [ "$${GTFS_URL}" = "https://koontikartta.navici.com/tiedostot/gtfs.zip" ]; then \
+	export "$$(grep '^GTFS_MODIFICATION_PARAM=' < .env)"
+	if [ ! "$${GTFS_MODIFICATION_PARAM}" = "" ]; then \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data-raw; \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) gtfs-data; \
 	else \
