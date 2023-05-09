@@ -1,6 +1,9 @@
 .ONESHELL:
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
+# TODO:
+#   When using shell variables, don't forget to escape them with `$`.
+#   One can search for unescaped `$` with the following regex: `[^\$]\$[^\$]`.
 
 DOCKER_BUILD_ARGS := --progress=plain
 #DOCKER_BUILD_ARGS := --progress=plain --no-cache
@@ -30,8 +33,8 @@ build: clean  ## Build BikeTripPlanner Docker images
 	export "$$(grep '^WOF_IDS=' < .env)"
 
 	pelias_json="$$(cat "$${PELIAS_BUILD_DIR}/pelias.json")"
-	if [ "${COUNTRY_CODE}" = "" ]; then \
-	  jq 'del(.imports.whosonfirst.countryCode)' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"; \
+	if [ "$${COUNTRY_CODE}" = "" ]; then \
+	  jq 'del(.imports.whosonfirst.countryCode)' <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"; \
 	else \
 	  jq ". | .imports.whosonfirst.countryCode=\"$${COUNTRY_CODE}\"" <<< "$${pelias_json}" > "$${PELIAS_BUILD_DIR}/pelias.json"; \
 	fi
