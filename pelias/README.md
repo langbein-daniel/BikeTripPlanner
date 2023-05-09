@@ -2,7 +2,7 @@
 
 The Pelias data import pipeline is based on the Pelias [example for Germany](https://github.com/pelias/docker/tree/master/projects/germany).
 
-We have added an additional data importer developed by HSL that adds two layers, stops and stations, in [gtfs](gtfs).
+We have added a data importer developed by HSL that imports two layers, stops and stations, in [gtfs](gtfs).
 
 The main configuration is done with [pelias.json](pelias.json).
 
