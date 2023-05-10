@@ -70,7 +70,7 @@
   "multiThreadElevationCalculations": true,
   // Precompute geoid difference values at a more granular level
   // to match end users' intuitive understanding of elevation.
-  "includeEllipsoidToGeoidDifference": true
+  "includeEllipsoidToGeoidDifference": true,
   // By default, OTP expects the elevation data to use metres. However, by setting elevationUnitMultiplier in build-config.json, it is possible to define a multiplier that converts the elevation values from some other unit to metres.
 //  "demDefaults": {
 //    "elevationUnitMultiplier": 0.1
