@@ -108,7 +108,8 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
         PORT: 4400
     restart: unless-stopped
-#    ports: [ '127.0.0.1:4400:4400/tcp' ]
+    # Ports are only required for debugging purposes and can be commented out.
+    ports: [ '127.0.0.1:4400:4400/tcp' ]
     networks:
       - pelias
 
@@ -139,7 +140,8 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PLACEHOLDER_RESPONSE:?}
         PORT: 4100
     restart: unless-stopped
-#    ports: [ '127.0.0.1:4100:4100/tcp' ]
+    # Ports are only required for debugging purposes and can be commented out.
+    ports: [ '127.0.0.1:4100:4100/tcp' ]
     networks:
       - pelias
 
@@ -175,7 +177,8 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_INTERPOLATION_RESPONSE:?}
         PORT: 4300
     restart: unless-stopped
-#    ports: [ '127.0.0.1:4300:4300/tcp' ]
+    # Ports are only required for debugging purposes and can be commented out.
+    ports: [ '127.0.0.1:4300:4300/tcp' ]
     networks:
       - pelias
 
@@ -196,7 +199,8 @@ services:
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PIP_RESPONSE:?}
         PORT: 4200
     restart: unless-stopped
-#    ports: [ '127.0.0.1:4200:4200/tcp' ]
+    # Ports are only required for debugging purposes and can be commented out.
+    ports: [ '127.0.0.1:4200:4200/tcp' ]
     networks:
       - pelias
 
@@ -209,7 +213,8 @@ services:
       args:
         IMAGE_PELIAS_ELASTICSEARCH: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
-#    ports: [ '127.0.0.1:9200:9200/tcp', '127.0.0.1:9300:9300/tcp' ]
+    # Ports are only required for debugging purposes and can be commented out.
+    ports: [ '127.0.0.1:9200:9200/tcp', '127.0.0.1:9300:9300/tcp' ]
     ulimits:
       memlock:
         soft: -1
