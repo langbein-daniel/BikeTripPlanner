@@ -56,6 +56,7 @@
     // If this is not specified, the following warning is printed during build:
     //   WARN (OpenStreetMapProvider.java:134) Missing time zone for OSM source file - time-restricted entities will not be created
     "timeZone": "Europe/Berlin",
+    // TODO: Make this configurable via .env
     // The named set of mapping rules applied when parsing OSM tags.
     // default | norway | uk | finland | germany | atlanta | houston | portland
     "osmTagMapping": "germany"
@@ -75,11 +76,12 @@
 //    "elevationUnitMultiplier": 0.1
 //  }
 
-//  "transitFeeds": [
-//    {
-//      "type": "gtfs",
-//      "source": "gtfs.zip",
-//      "feedId": "1"
-//    }
-//  ]
+  "transitFeeds": [
+    {
+      "type": "gtfs",
+      "source": "gtfs.zip",
+      // Overrides any feed ID defined within the GTFS feed itself (feed_info.txt).
+      "feedId": "1"
+    }
+  ]
 }
