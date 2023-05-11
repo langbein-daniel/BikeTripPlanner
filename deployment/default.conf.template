@@ -2,6 +2,16 @@ server {
     server_name ${DOMAIN_TILESERVER_GL};
     listen 80;
     location / {
+        # https://maptiler-tileserver.readthedocs.io/en/latest/deployment.html#nginx-reverse-proxy
+        #   This include directive sets up required headers for proxy and proxy cache.
+        #   As well it includes the required ``X-Forwarded-*`` headers for tileserver to properly generate tiles.
+        #   include proxy_params;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Proto https;
+
         proxy_pass http://${IP_TILESERVER_GL}:7070;
     }
 }
