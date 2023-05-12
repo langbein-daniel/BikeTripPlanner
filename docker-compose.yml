@@ -42,6 +42,7 @@ services:
         BUILD_NAME: ${BUILD_NAME:?}
         JAVA_BUILD_OPTS: ${JAVA_BUILD_OPTS:?}
         JAVA_OPTS: ${JAVA_OPTS:?}
+        TIMEZONE: ${TIMEZONE:?}
         HEALTHCHECK_AGENCY_NAME: ${HEALTHCHECK_OPENTRIPPLANNER:?}
     restart: unless-stopped
     ports:

@@ -9,8 +9,21 @@ FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Running `sudo docker run --rm --entrypoint cat docker.io/opentripplanner/opentripplanner:latest /docker-entrypoint.sh` reveals:
 #   java $JAVA_OPTS -cp @/app/jib-classpath-file @/app/jib-main-class-file /var/opentripplanner/ $@
 
+RUN apt-get update \
+    && apt-get install -y jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy build configuration.
 COPY ./build-config.json  /var/opentripplanner/
-# otp-config.json contains settings relevant during graph creation
+# Remove line comments from build-config.json
+RUN sed 's|^\s*//.*||' /var/opentripplanner/build-config.json > /tmp/build-config.json
+# Set .osmDefaults.timeZone variable in build-config.json
+ARG TIMEZONE=Europe/Berlin
+RUN jq ". | .osmDefaults.timeZone=\"${TIMEZONE}\"" /tmp/build-config.json > /var/opentripplanner/build-config.json \
+    && rm /tmp/build-config.json
+
+# Copy OTP configuration.
+# otp-config.json contains settings relevant during graph creation.
 COPY ./otp-config.json    /var/opentripplanner/
 
 # Build street graph.
