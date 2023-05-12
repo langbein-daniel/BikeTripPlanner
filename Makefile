@@ -12,13 +12,16 @@ DOCKER_BUILD_ARGS := --progress=plain
 #DOCKER_BUILD_ARGS := --progress=plain --no-cache
 
 .PHONY: all
-all: build test  ## Default target. Build and test BikeTripPlanner Docker images.
+all: build  ## Default target. Build and test BikeTripPlanner Docker images.
+	${MAKE} test
 
 # The `build` target consists of all `build-*` targets below.
 # Their ordering is important.
 # Details on the individual steps are given in `README.md`.
 .PHONY: build
-build: build-data build-tilemaker build-otp-config build-pelias-import build-images  ## Build BikeTripPlanner Docker images.
+build: build-data build-tilemaker build-otp-config  ## Build BikeTripPlanner Docker images.
+	${MAKE} build-pelias-import
+	${MAKE} build-images
 
 .PHONY: build-data
 build-data:
@@ -81,7 +84,8 @@ build-images:
 	sudo docker compose build $(DOCKER_BUILD_ARGS)
 
 .PHONY: test
-test: start stop  ## Test the built Docker images.
+test: start  ## Test the built Docker images.
+	${MAKE} stop
 
 .PHONY: publish
 publish:  ## Upload Docker images to container registry.
