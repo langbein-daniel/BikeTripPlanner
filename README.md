@@ -5,6 +5,14 @@ Get your journey-planner instance up and running with Docker Compose.
 A demo instance covering the area of the German transport association
 VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
 
+**TLDR**:
+* Configuration is done in [.env](.env).
+* Run `make build` to build all Docker images.
+* Thereafter, run `make test` to check if the built containers start healthy or `make start` to keep the local instance running.
+* Optionally, use `make publish` to upload the Docker images into a registry.
+* Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
+
+
 ![nuremberg-bike-and-ride.png](screenshot-nuremberg-bike-and-ride.png)
 
 ## Configuration
@@ -28,8 +36,6 @@ For advanced configuration, see:
 Prerequisites: Install Docker Compose, `jq`, `sudo` and optionally `make`.
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
-
-TLDR: Just run `make` to build all Docker images.
 
 ### GTFS data
 
@@ -148,23 +154,37 @@ Start all services and wait for them to be healthy:
 sudo docker compose up -d --wait
 ```
 
-Open http://localhost:9090 and test if searching for addresses and places works.
-
-Test if navigation works:
-
-* For the VGN, open e.g. http://localhost:9090/reitti/Erlangen%3A%3A49.596018%2C11.001793/N%C3%BCrnberg%20Hbf%3A%3A49.446369%2C11.081806
+If this fails, you may need to adjust the healthcheck configuration.
 
 ### View healthcheck output
 
-* https://docs.docker.com/engine/reference/builder/#healthcheck
-
-The first 4096 bytes of a containers healthcheck output can be viewed with:
+If a container is unhealthy, the first 4096 bytes of the healthcheck output can be viewed with:
 
 ```shell
 CONTAINER=libpostal && \
 CONTAINER_ID="$(sudo docker compose ps -q "${CONTAINER}")" && \
 sudo docker inspect "${CONTAINER_ID}" | jq '.[].State.Health.Log[].Output'
 ```
+
+Additional information: https://docs.docker.com/engine/reference/builder/#healthcheck
+
+### Interactive testing
+
+In addition to the container healthchecks, you can do the following:
+
+* Background map: Open http://localhost:7070 and test if the vector and raster maps look as expected.
+* Routing: Open http://localhost:8080
+  * Use right-click to set start and end points on the map.
+  * Change `travel by` to one of the bicycle modes, e.g. `Bicycle & Transit`, then press `Plan your Trip`. If there is only a direct bicycle connection, your GTFS data might be missing the `bikes_allowed` field.
+    * ![img_1.png](screenshot-OTP.png)
+* Web UI: Open http://localhost:9090
+  * Test if searching for addresses and places works.
+    * ![img_3.png](screenshot-UI-address-search.png)
+  * Is the stop and station map overlay visible?
+    * ![img_4.png](screenshot-UI-map-overlay.png)
+  * Test if navigation works on.
+    * For the VGN, opening this link will search for journeys in Nuremberg: http://localhost:9090/reitti/Erlangen%3A%3A49.596018%2C11.001793/N%C3%BCrnberg%20Hbf%3A%3A49.446369%2C11.081806
+    * ![img_2.png](screenshot-UI-suggested-journeys.png)
 
 ### Shutdown
 

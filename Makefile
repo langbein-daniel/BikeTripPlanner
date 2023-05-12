@@ -1,18 +1,27 @@
+# Execute the commands of each target in one
+# shell to allow using the same shell variables
+# in multiple commands.
 .ONESHELL:
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 # TODO:
-#   When using shell variables, don't forget to escape them with `$`.
-#   One can search for unescaped `$` with the following regex: `[^\$]\$[^\$]`.
+#   When using shell variables in a recipe, don't forget to escape them with `$`.
+#   To search for unescaped `$`, the following regex can be used: `[^\$]\$[^\$]`.
 
 DOCKER_BUILD_ARGS := --progress=plain
 #DOCKER_BUILD_ARGS := --progress=plain --no-cache
 
 .PHONY: all
-all: build
+all: build test  ## Default target. Build and test BikeTripPlanner Docker images.
 
+# The `build` target consists of all `build-*` targets below.
+# Their ordering is important.
+# Details on the individual steps are given in `README.md`.
 .PHONY: build
-build: clean  ## Build BikeTripPlanner Docker images
+build: build-data build-tilemaker build-otp-config build-pelias-import build-images  ## Build BikeTripPlanner Docker images.
+
+.PHONY: build-data
+build-data:
 	export "$$(grep '^GTFS_MODIFICATION_PARAM=' < .env)"
 	if [ ! "$${GTFS_MODIFICATION_PARAM}" = "" ]; then \
 	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data-raw; \
@@ -21,12 +30,16 @@ build: clean  ## Build BikeTripPlanner Docker images
 	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data; \
 	fi
 	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
+.PHONY: build-tilemaker
+build-tilemaker:
 	sudo docker compose -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
-
+.PHONY: build-otp-config
+build-otp-config:
 	export "$$(grep '^TIMEZONE=' < .env)"
 	build_config_json="$$(sed 's|^\s*//.*||' opentripplanner/build-config.json)"
 	jq ". | .osmDefaults.timeZone=\"$${TIMEZONE}\"" <<< "$${build_config_json}" > opentripplanner/build-config.json
-
+.PHONY: build-pelias-import
+build-pelias-import: clean-pelias-import
 	export "$$(grep '^BUILD_NAME=' < .env)"
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
 	export "$$(grep '^COUNTRY_CODE=' < .env)"
@@ -63,21 +76,35 @@ build: clean  ## Build BikeTripPlanner Docker images
 	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) gtfs
 	sudo docker compose -f build-pelias.yml run --rm gtfs  ./bin/start
 	sudo docker compose -f build-pelias.yml down
-
+.PHONY: build-images
+build-images:
 	sudo docker compose build $(DOCKER_BUILD_ARGS)
 
-.PHONY: start  ## (Re-)Start the local BikeTripPlanner instance
-start: stop
+.PHONY: test
+test: start stop  ## Test the built Docker images.
+
+.PHONY: publish
+publish:  ## Upload Docker images to container registry.
+	./publish.sh
+
+.PHONY: start
+start: stop  ## (Re-)Start local BikeTripPlanner instance.
 	sudo docker compose up -d --wait
 
-.PHONY: stop  ## Stop the local BikeTripPlanner instance
-stop:
+.PHONY: stop
+stop:  ## Stop local BikeTripPlanner instance.
 	sudo docker compose down
 
 .PHONY: clean
-clean:
-	sudo docker compose down
+clean: clean-pelias-import  ## Clean up after `make build`.
+
+.PHONY: clean-pelias-import
+clean-pelias-import:
 	sudo docker compose -f build-pelias.yml down
 
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
 	sudo rm -rf "$${PELIAS_BUILD_DIR}/data"
+
+.PHONY: help
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
