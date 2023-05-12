@@ -1,6 +1,13 @@
 # BikeTripPlanner
 
-Get your journey-planner instance up and running with Docker Compose.
+A multimodal journey planner that is built on open source components and is powered by open data.
+
+[<img src="screenshot-nuremberg-bike-and-ride.png" width="550">](screenshot-nuremberg-bike-and-ride.png)
+
+Configuration for another region with different data sources is possible through a single `.env` file.
+Using Docker Compose, the project can be run locally or publicly accessible through a domain with automatic HTTPS certificate generation.
+
+The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransit-ui), [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner), [Pelias](https://github.com/pelias/pelias), [Tilemaker](https://github.com/systemed/tilemaker), [Tileserver GL](https://github.com/maptiler/tileserver-gl) and [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy).
 
 A demo instance covering the area of the German transport association
 VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
@@ -11,9 +18,6 @@ VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
 * Thereafter, run `make test` to check if the built containers start healthy or `make start` to keep the local instance running.
 * Optionally, use `make publish` to upload the Docker images into a registry.
 * Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
-
-
-![nuremberg-bike-and-ride.png](screenshot-nuremberg-bike-and-ride.png)
 
 ## Configuration
 
