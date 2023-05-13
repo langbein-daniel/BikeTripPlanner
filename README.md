@@ -2,15 +2,12 @@
 
 A multimodal journey planner that is built on open source components and is powered by open data.
 
-[<img src="screenshot-nuremberg-bike-and-ride.png" width="550">](screenshot-nuremberg-bike-and-ride.png)
-
 Configuration for another region with different data sources is possible through a single `.env` file.
 Using Docker Compose, the project can be run locally or publicly accessible through a domain with automatic HTTPS certificate generation.
 
-The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransit-ui), [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner), [Pelias](https://github.com/pelias/pelias), [Tilemaker](https://github.com/systemed/tilemaker), [Tileserver GL](https://github.com/maptiler/tileserver-gl) and [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy).
+The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransit-ui) (web frontend), [OpenTripPlanner](https://github.com/opentripplanner/OpenTripPlanner) (multimodal router), [Pelias](https://github.com/pelias/pelias) (geocoder), [Tilemaker](https://github.com/systemed/tilemaker) (map generation), [Tileserver GL](https://github.com/maptiler/tileserver-gl) (map server) and [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) (reverse proxy and HTTPS certificates). Data sources are a GTFS feed (for scheduled public transit data), [OpenStreetmap](https://osm.org) (for road network and address data) and [Who's On First](https://whosonfirst.org/) (for places and their hierarchy).
 
-A demo instance covering the area of the German transport association
-VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
+![diagram-architecture.svg](diagram-architecture.svg)
 
 **TLDR**:
 * Configuration is done in [.env](.env).
@@ -18,6 +15,13 @@ VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
 * Thereafter, run `make test` to check if the built containers start healthy or `make start` to keep the local instance running.
 * Optionally, use `make publish` to upload the Docker images into a registry.
 * Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
+
+## Demo
+
+A demo instance covering the area of the German transport association
+VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
+
+[<img src="screenshot-nuremberg-bike-and-ride.png" width="550">](screenshot-nuremberg-bike-and-ride.png)
 
 ## Configuration
 

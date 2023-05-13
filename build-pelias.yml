@@ -26,7 +26,7 @@ services:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"
 
-  # Supports importing admin areas and venues from Who's on First
+  # Supports importing admin areas and venues from Who's On First
   # https://github.com/pelias/pelias/#data-importers
   whosonfirst:
     image: ${IMAGE_PELIAS_WHOSONFIRST:?}
@@ -127,7 +127,7 @@ services:
   # The Point-in-Polygon (PIP) service loads polygon data representing the boundaries of cities, states, regions, countries etc. into memory, and can perform calculations on that geometric data. It's used to determine if a given point lies in a particular polygon. Thus, it's highly recommended for reverse geocoding.
   # https://github.com/pelias/documentation/blob/master/services.md#descriptions
   #
-  # It will look for Who's on First data in the place configured in `pelias.json`.
+  # It will look for Who's On First data in the place configured in `pelias.json`.
   # https://github.com/pelias/pip-service#usage
   pip:
     image: ${IMAGE_PELIAS_PIP:?}
