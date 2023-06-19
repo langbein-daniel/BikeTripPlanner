@@ -19,7 +19,7 @@ all: build  ## Default target. Build and test BikeTripPlanner Docker images.
 # Their ordering is important.
 # Details on the individual steps are given in `README.md`.
 .PHONY: build
-build: build-data build-tilemaker build-otp-config  ## Build BikeTripPlanner Docker images.
+build: build-data build-tilemaker  ## Build BikeTripPlanner Docker images.
 	${MAKE} build-pelias-import
 	${MAKE} build-images
 
@@ -36,11 +36,6 @@ build-data:
 .PHONY: build-tilemaker
 build-tilemaker:
 	sudo docker compose -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
-.PHONY: build-otp-config
-build-otp-config:
-	export "$$(grep '^TIMEZONE=' < .env)"
-	build_config_json="$$(sed 's|^\s*//.*||' opentripplanner/build-config.json)"
-	jq ". | .osmDefaults.timeZone=\"$${TIMEZONE}\"" <<< "$${build_config_json}" > opentripplanner/build-config.json
 .PHONY: build-pelias-import
 build-pelias-import: clean-pelias-import
 	export "$$(grep '^BUILD_NAME=' < .env)"
