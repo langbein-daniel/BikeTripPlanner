@@ -13,6 +13,14 @@ services:
       args:
         - GTFS_URL=${GTFS_URL:?}
 
+  # Modify GTFS zip file.
+  gtfs-modified:
+    build:
+      context: github.com/langbein-daniel/gtfs-modifications
+      args:
+        - BUILD_NAME=${BUILD_NAME:?}
+        - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM:?}
+
   # Download OSM region and cut with bounding box.
   osm-excerpt:
     build:

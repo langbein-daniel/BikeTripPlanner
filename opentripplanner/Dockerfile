@@ -2,7 +2,7 @@ ARG BUILD_NAME=build
 ARG IMAGE_OPENTRIPPLANNER=docker.io/opentripplanner/opentripplanner:latest
 
 FROM ${BUILD_NAME}-osm-excerpt AS osm
-FROM ${BUILD_NAME}-gtfs-data AS gtfs
+FROM ${BUILD_NAME}-gtfs-modified AS gtfs
 
 FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Current entrypoint: /docker-entrypoint.sh

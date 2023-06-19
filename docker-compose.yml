@@ -38,7 +38,7 @@ services:
       context: opentripplanner
       args:
         IMAGE_OPENTRIPPLANNER: ${IMAGE_OPENTRIPPLANNER:?}
-        # Used to determine name of `osm-excerpt` and `gtfs-data` images.
+        # Used to determine name of `osm-excerpt` and `gtfs-modified` images.
         BUILD_NAME: ${BUILD_NAME:?}
         JAVA_BUILD_OPTS: ${JAVA_BUILD_OPTS:?}
         JAVA_OPTS: ${JAVA_OPTS:?}

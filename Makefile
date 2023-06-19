@@ -25,12 +25,13 @@ build: build-data build-tilemaker  ## Build BikeTripPlanner Docker images.
 
 .PHONY: build-data
 build-data:
+	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data
+
 	export "$$(grep '^GTFS_MODIFICATION_PARAM=' < .env)"
 	if [ ! "$${GTFS_MODIFICATION_PARAM}" = "" ]; then \
-	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data-raw; \
-	  sudo docker compose -f build-data-vgn.yml build $(DOCKER_BUILD_ARGS) gtfs-data; \
+	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) gtfs-modified; \
 	else \
-	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data; \
+	  sudo docker tag build-gtfs-data build-gtfs-modified; \
 	fi
 	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
 .PHONY: build-tilemaker
@@ -62,7 +63,7 @@ build-pelias-import: clean-pelias-import
 	sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 	sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
-	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-gtfs-data   /data/gtfs.zip        > "$${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
+	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-gtfs-modified   /data/gtfs.zip        > "$${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 	sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
 	sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh

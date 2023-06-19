@@ -47,21 +47,26 @@ The following sections provide additional information about the individual build
 
 ### GTFS data
 
-If the GTFS data set is valid and needs no further processing, run the following:
+First, download the GTFS data set:
 
 ```shell
 sudo docker compose -f build-data.yml build --pull gtfs-data
 ```
 
-Or else if you need to modify the GTFS data, add another build step:
-
-* The GTFS zip file from the VGN does not contain the `bikes_allowed` column and some values of the CSV files are not properly quoted/escaped.
-* We want to modify the GTFS data first before creating the `gtfs-data` image.
-* This is done with the following two commands:
+Then, either perform GTFS modifications or skip this step by tagging the `gtfs-data` image with `gtfs-modified`:
 
 ```shell
-sudo docker compose -f build-data-vgn.yml build --pull gtfs-data-raw
-sudo docker compose -f build-data-vgn.yml build gtfs-data
+sudo docker tag build-gtfs-data build-gtfs-modified
+```
+
+The GTFS modifications are not always necessary. They can be applied as follows:
+
+* The GTFS zip file from the VGN does not contain the `bikes_allowed` column and some values of the CSV files are not properly quoted/escaped.
+* We want to modify the GTFS data.
+* This is done with the following command:
+
+```shell
+sudo docker compose -f build-data.yml build gtfs-modified
 ```
 
 ### OSM excerpt
@@ -120,7 +125,7 @@ sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 # Download, prepare and import data:
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-data   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
+sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-modified   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
 sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
