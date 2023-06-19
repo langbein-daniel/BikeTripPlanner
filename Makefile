@@ -33,6 +33,7 @@ build-data:
 	else \
 	  sudo docker tag build-gtfs-data build-gtfs-modified; \
 	fi
+
 	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
 .PHONY: build-tilemaker
 build-tilemaker:

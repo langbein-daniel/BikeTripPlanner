@@ -19,7 +19,8 @@ services:
       context: github.com/langbein-daniel/gtfs-modifications
       args:
         - BUILD_NAME=${BUILD_NAME:?}
-        - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM:?}
+        # If .env variable is empty, this build step is skipped. Thus no `:?`.
+        - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM}
 
   # Download OSM region and cut with bounding box.
   osm-excerpt:
