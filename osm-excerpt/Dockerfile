@@ -7,7 +7,7 @@ RUN apt-get update \
 
 WORKDIR /data
 
-ARG OSM_PBF_URL=https://download.geofabrik.de/europe-latest.osm.pbf
+ARG OSM_PBF_URL=https://download.geofabrik.de/europe/germany-latest.osm.pbf
 ADD ${OSM_PBF_URL} region.osm.pbf
 
 ARG MIN_LON=10.011636032586688
