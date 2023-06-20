@@ -299,3 +299,14 @@ On your BikeTripPlanner server:
 cd deployment
 sudo docker compose -f btp-only.yml up -d --wait
 ```
+
+## Other notes
+
+Extract file from Docker image.
+
+Example: Extract GTFS zip file after the gtfs-modified build step:
+
+```shell
+export "$(grep '^BUILD_NAME=' < .env)"
+sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-modified /data/gtfs.zip > gtfs.zip
+```
