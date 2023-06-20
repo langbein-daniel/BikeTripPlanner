@@ -47,40 +47,54 @@ The following sections provide additional information about the individual build
 
 ### GTFS data
 
+#### 1) gtfs-data
+
 First, download the GTFS data set:
 
 ```shell
-sudo docker compose -f build-data.yml build --pull gtfs-data
+sudo docker compose -f build-data.yml build --progress=plain --pull gtfs-data
 ```
 
-Then, either perform GTFS modifications or skip this step by tagging the `gtfs-data` image with `gtfs-modified`:
+#### 2) gtfs-modified
+
+If desired, the GTFS feed can be modified: Add or change the `bikes_allowed` column, delete files from the GTFS feed or fix unescaped double-quotes.
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain gtfs-modified
+```
+
+This step is optional and kan be skipped with:
 
 ```shell
 sudo docker tag build-gtfs-data build-gtfs-modified
 ```
 
-The GTFS modifications are not always necessary. They can be applied as follows:
+#### 3) gtfs-filter
 
-* The GTFS zip file from the VGN does not contain the `bikes_allowed` column and some values of the CSV files are not properly quoted/escaped.
-* We want to modify the GTFS data.
-* This is done with the following command:
+If desired, the GTFS feed can be filtered to the bounding box: Only routes (and all linked data) that reside inside the or intersect with the bounding box are kept.
 
 ```shell
-sudo docker compose -f build-data.yml build gtfs-modified
+sudo docker compose -f build-data.yml build --progress=plain gtfs-filtered
+```
+
+This step is optional and kan be skipped with:
+
+```shell
+sudo docker tag build-gtfs-modified build-gtfs-filtered
 ```
 
 ### OSM excerpt
 
 ```shell
-sudo docker compose -f build-data.yml build --pull osm-excerpt
+sudo docker compose -f build-data.yml build --progress=plain --pull osm-excerpt
 ```
 
 ### Background map (Tileserver GL)
 
 ```shell
-sudo docker compose -f build-tilemaker.yml build --pull tilemaker
+sudo docker compose -f build-tilemaker.yml build --progress=plain --pull tilemaker
 # Don't `--pull` as we are using the previously built `tilemaker`.
-sudo docker compose build tileserver-gl
+sudo docker compose build --progress=plain tileserver-gl
 ```
 
 ### Routing (OpenTripPlanner)
@@ -88,7 +102,7 @@ sudo docker compose build tileserver-gl
 ```shell
 # Build final OpenTripPlanner container.
 # Don't `--pull` as we are using the previously built `osm-excerpt`.
-sudo docker compose build opentripplanner
+sudo docker compose build --progress=plain opentripplanner
 ```
 
 ### Geocoder (Pelias)
@@ -125,7 +139,7 @@ sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 # Download, prepare and import data:
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-modified   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
+sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
 sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
@@ -138,7 +152,7 @@ sudo docker compose -f build-pelias.yml run --build --rm gtfs  ./bin/start
 # Stop and remove intermediate containers.
 sudo docker compose -f build-pelias.yml down
 # Build final Pelias containers.
-sudo docker compose build api libpostal placeholder interpolation pip elasticsearch
+sudo docker compose build --progress=plain api libpostal placeholder interpolation pip elasticsearch
 # Remove temporary data directory.
 #sudo rm -r "${PELIAS_BUILD_DIR}/data"
 ```
@@ -146,7 +160,7 @@ sudo docker compose build api libpostal placeholder interpolation pip elasticsea
 ### Web UI (Digitransit-UI)
 
 ```shell
-sudo docker compose build --pull digitransit-ui
+sudo docker compose build --progress=plain --pull digitransit-ui
 ```
 
 ## Test on local machine

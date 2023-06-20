@@ -22,6 +22,17 @@ services:
         # If .env variable is empty, this build step is skipped. Thus no `:?`.
         - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM}
 
+  # Filter GTFS zip file to bounding box.
+  gtfs-filtered:
+    build:
+      context: ./gtfs-filter
+      args:
+        - BUILD_NAME=${BUILD_NAME:?}
+        - MIN_LON=${MIN_LON:?}
+        - MAX_LON=${MAX_LON:?}
+        - MIN_LAT=${MIN_LAT:?}
+        - MAX_LAT=${MAX_LAT:?}
+
   # Download OSM region and cut with bounding box.
   osm-excerpt:
     build:
