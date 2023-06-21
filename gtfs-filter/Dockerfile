@@ -19,5 +19,12 @@ ARG MIN_LAT=48.70792025947608
 ARG MAX_LAT=50.25793688217101
 RUN /data/filter.R ${MIN_LON} ${MAX_LON} ${MIN_LAT} ${MAX_LAT}
 
-FROM scratch
+# The Pelias pipeline step takes place outside a Dockerfile (as Elasticsearch is required to run spearately).
+# We extract the gtfs.zip file with `cat` from the built Docker image.
+# Therefore, we can't use `scratch` here.
+#
+#FROM scratch
+#COPY --from=filter /data/gtfs.zip /data/gtfs.zip
+#
+FROM alpine
 COPY --from=filter /data/gtfs.zip /data/gtfs.zip
