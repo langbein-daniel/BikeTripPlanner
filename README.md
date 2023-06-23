@@ -83,10 +83,19 @@ This step is optional and kan be skipped with:
 sudo docker tag build-gtfs-modified build-gtfs-filtered
 ```
 
-### OSM excerpt
+### OSM data
+
+#### 1) osm-data
 
 ```shell
-sudo docker compose -f build-data.yml build --progress=plain --pull osm-excerpt
+sudo docker compose -f build-data.yml build --progress=plain --pull osm-data
+```
+
+#### 2) osm-excerpt
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain --pull osmium-tool
+sudo docker compose -f build-data.yml build --progress=plain osm-excerpt
 ```
 
 ### Background map (Tileserver GL)
@@ -141,7 +150,7 @@ sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 # Initialize Elasticsearch.
 sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 # Download, prepare and import data:
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
+sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/osm.pbf"
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 

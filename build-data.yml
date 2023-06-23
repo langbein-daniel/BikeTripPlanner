@@ -2,6 +2,12 @@ version: '3.9'
 name: ${BUILD_NAME:?}
 services:
 
+  # Application image for `osmium-tool`
+  # https://osmcode.org/osmium-tool/
+  osmium-tool:
+    build:
+      context: ./osmium-tool
+
   #
   # DATA SOURCES
   #
@@ -13,7 +19,7 @@ services:
       args:
         - GTFS_URL=${GTFS_URL:?}
 
-  # Modify GTFS zip file.
+  # Modify GTFS data.
   gtfs-modified:
     build:
       context: github.com/langbein-daniel/gtfs-modifications
@@ -22,7 +28,7 @@ services:
         # If .env variable is empty, this build step is skipped. Thus no `:?`.
         - GTFS_MODIFICATION_PARAM=${GTFS_MODIFICATION_PARAM}
 
-  # Filter GTFS zip file to bounding box.
+  # Filter GTFS data to bounding box.
   gtfs-filtered:
     build:
       context: ./gtfs-filter
@@ -33,12 +39,19 @@ services:
         - MIN_LAT=${MIN_LAT:?}
         - MAX_LAT=${MAX_LAT:?}
 
-  # Download OSM region and cut with bounding box.
+  # Download OSM data.
+  osm-data:
+    build:
+      context: ./osm-data
+      args:
+        - OSM_PBF_URL=${OSM_PBF_URL:?}
+
+  # Filter OSM data to bounding box.
   osm-excerpt:
     build:
       context: ./osm-excerpt
       args:
-        - OSM_PBF_URL=${OSM_PBF_URL:?}
+        - BUILD_NAME=${BUILD_NAME:?}
         - MIN_LON=${MIN_LON:?}
         - MAX_LON=${MAX_LON:?}
         - MIN_LAT=${MIN_LAT:?}

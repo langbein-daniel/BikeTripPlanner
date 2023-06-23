@@ -41,7 +41,9 @@ build-data:
 	  sudo docker tag build-gtfs-modified build-gtfs-filtered; \
 	fi
 
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-excerpt
+	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-data
+	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osmium-tool
+	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-excerpt
 .PHONY: build-tilemaker
 build-tilemaker:
 	sudo docker compose -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
@@ -70,7 +72,7 @@ build-pelias-import: clean-pelias-import
 
 	sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 	sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
-	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
+	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/osm.pbf"
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "$${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull polylines-gen

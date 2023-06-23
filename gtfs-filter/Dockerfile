@@ -1,7 +1,7 @@
 ARG BUILD_NAME=journey-planner
 FROM ${BUILD_NAME}-gtfs-modified AS gtfs
 
-FROM r-base as filter
+FROM r-base
 
 RUN apt-get update
 RUN apt-get install -y libssl-dev

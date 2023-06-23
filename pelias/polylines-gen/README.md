@@ -14,7 +14,7 @@ export PATH="$PATH:$(go env GOBIN):$(go env GOPATH)/bin"
 ```
 
 ```shell
-OSM=../data/openstreetmap/extract.osm.pbf
+OSM=../data/openstreetmap/osm.pbf
 POLYLINES=../data/polylines/extract.0sv
 
 go version

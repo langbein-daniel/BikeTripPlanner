@@ -31,7 +31,7 @@ RUN ln -s /tilemaker /usr/bin/tilemaker
 WORKDIR /data
 COPY --from=map-style /data .
 COPY --from=sprites /build build/sprites
-COPY --from=osm /data/extract.osm.pbf build/unnamed/extract.osm.pbf
+COPY --from=osm /data/osm.pbf build/unnamed/extract.osm.pbf
 # We have the target area already available.
 # By creating an empty region file,
 # we avoid that the Makefile downloads the whole region and extracts the area again.
