@@ -73,7 +73,8 @@ build-pelias-import: clean-pelias-import
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "$${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
-	sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
+	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull polylines-gen
+	sudo docker compose -f build-pelias.yml run --rm polylines-gen
 	sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
 	sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/build.sh
 	sudo docker compose -f build-pelias.yml run --rm interpolation ./docker_build.sh

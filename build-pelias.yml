@@ -43,6 +43,12 @@ services:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
       - "${PELIAS_BUILD_DIR:?}/data:/data"
 
+  polylines-gen:
+    build:
+      context: ${PELIAS_BUILD_DIR:?}/polylines-gen
+    volumes:
+      - "${PELIAS_BUILD_DIR:?}/data:/data"
+
   #
   # SETUP
   #

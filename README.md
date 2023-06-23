@@ -113,6 +113,7 @@ export "$(grep '^BUILD_NAME=' < .env)"
 export "$(grep '^PELIAS_BUILD_DIR=' < .env)"
 export "$(grep '^COUNTRY_CODE=' < .env)"
 export "$(grep '^WOF_IDS=' < .env)"
+
 # Change `countryCode` in pelias.json file.
 pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
 if [ "${COUNTRY_CODE}" = "" ]; then
@@ -122,6 +123,7 @@ else
   # Set `countryCode`
   jq ". | .imports.whosonfirst.countryCode=\"${COUNTRY_CODE}\"" <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
 fi
+
 # Change `importPlace` in pelias.json file.
 pelias_json="$(cat "${PELIAS_BUILD_DIR}/pelias.json")"
 if [ "${WOF_IDS}" = "" ]; then
@@ -131,6 +133,7 @@ else
   # Set `importPlace`
   jq --argjson wof_ids "${WOF_IDS}" '. | .imports.whosonfirst.importPlace=$wof_ids' <<< "${pelias_json}" > "${PELIAS_BUILD_DIR}/pelias.json"
 fi
+
 # Create temporary Pelias data directory.
 mkdir -p "${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 # Start Elasticsearch and wait until healthy.
@@ -141,7 +144,14 @@ sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/extract.osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/extract.osm.pbf"
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
-sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
+
+# The Pelias Docker-Compose helper script uses the following command:
+#   sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
+# But this complains about a too large OSM file (e.g. of whole Germany).
+# Thus, we use another tool to generate polylines:
+sudo docker compose -f build-pelias.yml build --pull polylines-gen
+sudo docker compose -f build-pelias.yml run --rm polylines-gen
+
 sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
 sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/build.sh
 sudo docker compose -f build-pelias.yml run --rm interpolation ./docker_build.sh
