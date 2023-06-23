@@ -56,3 +56,11 @@ services:
         - MAX_LON=${MAX_LON:?}
         - MIN_LAT=${MIN_LAT:?}
         - MAX_LAT=${MAX_LAT:?}
+
+  # Filter OSM by tags/content.
+  osm-filtered:
+    build:
+      context: ./osm-filter
+      args:
+        - BUILD_NAME=${BUILD_NAME:?}
+        - OTP_OSM_TAGS=${OTP_OSM_TAGS:?}

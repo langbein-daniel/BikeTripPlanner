@@ -1,7 +1,7 @@
 ARG BUILD_NAME=build
 ARG IMAGE_OPENTRIPPLANNER=docker.io/opentripplanner/opentripplanner:latest
 
-FROM ${BUILD_NAME}-osm-excerpt AS osm
+FROM ${BUILD_NAME}-osm-filtered AS osm
 FROM ${BUILD_NAME}-gtfs-filtered AS gtfs
 
 FROM ${IMAGE_OPENTRIPPLANNER} as builder

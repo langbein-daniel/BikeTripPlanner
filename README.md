@@ -98,6 +98,13 @@ sudo docker compose -f build-data.yml build --progress=plain --pull osmium-tool
 sudo docker compose -f build-data.yml build --progress=plain osm-excerpt
 ```
 
+#### 3) osm-filtered
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain --pull osmium-tool
+sudo docker compose -f build-data.yml build --progress=plain osm-filtered
+```
+
 ### Background map (Tileserver GL)
 
 ```shell
