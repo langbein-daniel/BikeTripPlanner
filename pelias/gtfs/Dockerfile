@@ -2,7 +2,8 @@
 # source: https://github.com/HSLdevcom/pelias-data-container/blob/7fd2b552f172763cf16d99756812ee014fc5ba5c/scripts/install-tools.sh#L31
 
 # base image
-FROM pelias/baseimage
+ARG IMAGE_PELIAS_BASE=pelias/baseimage:master
+FROM ${IMAGE_PELIAS_BASE}
 
 # download apt dependencies
 # note: this is done in one command in order to keep down the size of intermediate containers

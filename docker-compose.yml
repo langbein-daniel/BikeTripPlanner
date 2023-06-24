@@ -14,6 +14,7 @@ services:
     build:
       context: tileserver-gl
       args:
+        IMAGE_DEBIAN: ${IMAGE_DEBIAN:?}
         IMAGE_TILESERVER_GL: ${IMAGE_TILESERVER_GL:?}
         # Used to determine name of `osm-excerpt` image.
         BUILD_NAME: ${BUILD_NAME:?}

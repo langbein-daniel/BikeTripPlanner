@@ -1,4 +1,4 @@
-ARG BUILD_NAME=journey-planner
+ARG BUILD_NAME=build
 FROM ${BUILD_NAME}-osm-data AS osm
 
 FROM ${BUILD_NAME}-osmium-tool

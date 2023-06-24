@@ -1,4 +1,5 @@
-FROM debian:stable-slim
+ARG IMAGE_DEBIAN=debian:stable-slim
+FROM ${IMAGE_DEBIAN}
 # https://hub.docker.com/_/debian/
 # https://packages.debian.org/stable/osmium-tool
 RUN apt-get update \

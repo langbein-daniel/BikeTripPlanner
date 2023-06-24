@@ -14,4 +14,4 @@ services:
       # Using `FROM <git-URL> as <name>` inside the Dockerfile of the tileserver-gl service below is not (yet) possible.
       # Thus, we build the image separately.
       # https://docs.docker.com/engine/reference/commandline/build/#build-with-url
-      context: github.com/systemed/tilemaker
+      context: ${DOCKERFILE_TILEMAKER:?}

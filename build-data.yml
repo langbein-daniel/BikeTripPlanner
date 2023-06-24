@@ -7,6 +7,8 @@ services:
   osmium-tool:
     build:
       context: ./osmium-tool
+      args:
+        - IMAGE_DEBIAN=${IMAGE_DEBIAN:?}
 
   #
   # DATA SOURCES
@@ -17,12 +19,13 @@ services:
     build:
       context: ./gtfs-data
       args:
+        - IMAGE_ALPINE=${IMAGE_ALPINE:?}
         - GTFS_URL=${GTFS_URL:?}
 
   # Modify GTFS data.
   gtfs-modified:
     build:
-      context: github.com/langbein-daniel/gtfs-modifications
+      context: ${DOCKERFILE_GTFS_MODIFICATIONS:?}
       args:
         - BUILD_NAME=${BUILD_NAME:?}
         # If .env variable is empty, this build step is skipped. Thus no `:?`.
@@ -33,6 +36,7 @@ services:
     build:
       context: ./gtfs-filter
       args:
+        - IMAGE_R_BASE=${IMAGE_R_BASE:?}
         - BUILD_NAME=${BUILD_NAME:?}
         - MIN_LON=${MIN_LON:?}
         - MAX_LON=${MAX_LON:?}
@@ -44,6 +48,7 @@ services:
     build:
       context: ./osm-data
       args:
+        - IMAGE_ALPINE=${IMAGE_ALPINE:?}
         - OSM_PBF_URL=${OSM_PBF_URL:?}
 
   # Filter OSM data to bounding box.

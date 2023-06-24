@@ -1,4 +1,5 @@
-FROM alpine
+ARG IMAGE_ALPINE=alpine
+FROM ${IMAGE_ALPINE}
 
 WORKDIR /data
 

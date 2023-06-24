@@ -1,12 +1,12 @@
 ARG BUILD_NAME=build
-ARG IMAGE_OPENTRIPPLANNER=docker.io/opentripplanner/opentripplanner:latest
+ARG IMAGE_OPENTRIPPLANNER=opentripplanner/opentripplanner
 
 FROM ${BUILD_NAME}-osm-filtered AS osm
 FROM ${BUILD_NAME}-gtfs-filtered AS gtfs
 
 FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Current entrypoint: /docker-entrypoint.sh
-# Running `sudo docker run --rm --entrypoint cat docker.io/opentripplanner/opentripplanner:latest /docker-entrypoint.sh` reveals:
+# Running `sudo docker run --rm --entrypoint cat opentripplanner/opentripplanner /docker-entrypoint.sh` reveals:
 #   java $JAVA_OPTS -cp @/app/jib-classpath-file @/app/jib-main-class-file /var/opentripplanner/ $@
 
 RUN apt-get update \

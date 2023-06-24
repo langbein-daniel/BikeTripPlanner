@@ -4,7 +4,8 @@ ARG IMAGE_TILESERVER_GL=maptiler/tileserver-gl
 # "ADD <git-URL>" is not yet stable Dockerfile syntax.
 # Thus, we install and clone with git manually.
 # https://docs.docker.com/engine/reference/builder/#adding-a-git-repository-add-git-ref-dir
-FROM debian:stable-slim AS map-style
+ARG IMAGE_DEBIAN=debian:stable-slim
+FROM ${IMAGE_DEBIAN} AS map-style
 # https://hub.docker.com/_/debian/
 RUN apt-get update \
     && apt-get install -y git \

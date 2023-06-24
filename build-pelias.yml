@@ -38,6 +38,7 @@ services:
     build:
       context: ${PELIAS_BUILD_DIR:?}/gtfs
       args:
+        - IMAGE_PELIAS_BASE=${IMAGE_PELIAS_BASE:?}
         - DOCKERFILE_PELIAS_GTFS=${DOCKERFILE_PELIAS_GTFS:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/pelias.json:/code/pelias.json"
@@ -46,6 +47,8 @@ services:
   polylines-gen:
     build:
       context: ${PELIAS_BUILD_DIR:?}/polylines-gen
+      args:
+        - IMAGE_GO=${IMAGE_GO:?}
     volumes:
       - "${PELIAS_BUILD_DIR:?}/data:/data"
 
