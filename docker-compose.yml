@@ -24,7 +24,7 @@ services:
         MAX_LON: ${MAX_LON:?}
         MIN_LAT: ${MIN_LAT:?}
         MAX_LAT: ${MAX_LAT:?}
-    restart: unless-stopped
+    restart: 'no'
     ports:
       - '127.0.0.1:7070:8080/tcp'
     networks:
@@ -45,7 +45,7 @@ services:
         JAVA_OPTS: ${JAVA_OPTS:?}
         TIMEZONE: ${TIMEZONE:?}
         HEALTHCHECK_AGENCY_NAME: ${HEALTHCHECK_OPENTRIPPLANNER:?}
-    restart: unless-stopped
+    restart: 'no'
     ports:
       - '127.0.0.1:8080:8080/tcp'
     networks:
@@ -68,7 +68,7 @@ services:
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_API_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_API_RESPONSE:?}
         PORT: 4000
-    restart: unless-stopped
+    restart: 'no'
     ports: [ '127.0.0.1:4000:4000/tcp' ]
     networks:
       - proxy
@@ -109,7 +109,7 @@ services:
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_LIBPOSTAL_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_LIBPOSTAL_RESPONSE:?}
         PORT: 4400
-    restart: unless-stopped
+    restart: 'no'
     # Ports are only required for debugging purposes and can be commented out.
     ports: [ '127.0.0.1:4400:4400/tcp' ]
     networks:
@@ -143,7 +143,7 @@ services:
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_PLACEHOLDER_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PLACEHOLDER_RESPONSE:?}
         PORT: 4100
-    restart: unless-stopped
+    restart: 'no'
     # Ports are only required for debugging purposes and can be commented out.
     ports: [ '127.0.0.1:4100:4100/tcp' ]
     networks:
@@ -180,7 +180,7 @@ services:
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_INTERPOLATION_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_INTERPOLATION_RESPONSE:?}
         PORT: 4300
-    restart: unless-stopped
+    restart: 'no'
     # Ports are only required for debugging purposes and can be commented out.
     ports: [ '127.0.0.1:4300:4300/tcp' ]
     networks:
@@ -202,7 +202,7 @@ services:
         HEALTHCHECK_REQUEST: ${HEALTHCHECK_PIP_REQUEST:?}
         HEALTHCHECK_RESPONSE: ${HEALTHCHECK_PIP_RESPONSE:?}
         PORT: 4200
-    restart: unless-stopped
+    restart: 'no'
     # Ports are only required for debugging purposes and can be commented out.
     ports: [ '127.0.0.1:4200:4200/tcp' ]
     networks:
@@ -216,7 +216,7 @@ services:
       dockerfile: ./elasticsearch.Dockerfile
       args:
         IMAGE_PELIAS_ELASTICSEARCH: ${IMAGE_PELIAS_ELASTICSEARCH:?}
-    restart: unless-stopped
+    restart: 'no'
     # Ports are only required for debugging purposes and can be commented out.
     ports: [ '127.0.0.1:9200:9200/tcp', '127.0.0.1:9300:9300/tcp' ]
     ulimits:
@@ -249,6 +249,7 @@ services:
         MIN_LAT: ${MIN_LAT:?}
         MAX_LAT: ${MAX_LAT:?}
         MIN_ZOOM: ${MIN_ZOOM:?}
+    restart: 'no'
     environment:
       OTP_URL: http://localhost:8080/otp/routers/default/
       GEOCODING_BASE_URL: http://localhost:4000/v1
