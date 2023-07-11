@@ -3,7 +3,13 @@ version: '3.9'
 name: ${NAME:?}
 networks:
   proxy:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1420
   pelias:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1420
 services:
 
   #

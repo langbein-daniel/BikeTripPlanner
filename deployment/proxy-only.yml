@@ -1,6 +1,9 @@
 version: '3.9'
 networks:
   proxy:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1420
 services:
 
   #
