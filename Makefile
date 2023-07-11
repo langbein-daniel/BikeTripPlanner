@@ -8,8 +8,9 @@ SHELL := bash
 #   When using shell variables in a recipe, don't forget to escape them with `$`.
 #   To search for unescaped `$`, the following regex can be used: `[^\$]\$[^\$]`.
 
-DOCKER_BUILD_ARGS := --progress=plain
-#DOCKER_BUILD_ARGS := --progress=plain --no-cache
+DOCKER_BUILD_ARGS :=
+#DOCKER_BUILD_ARGS := --no-cache
+COMPOSE_ARGS := --progress=plain
 
 .PHONY: all
 all: build  ## Default target. Build and test BikeTripPlanner Docker images.
@@ -25,29 +26,29 @@ build: build-data build-tilemaker  ## Build BikeTripPlanner Docker images.
 
 .PHONY: build-data
 build-data:
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull gtfs-data
 
 	export "$$(grep '^GTFS_MODIFICATION_PARAM=' < .env)"
 	if [ ! "$${GTFS_MODIFICATION_PARAM}" = "" ]; then \
-	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) gtfs-modified; \
+	  sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) gtfs-modified; \
 	else \
 	  sudo docker tag build-gtfs-data build-gtfs-modified; \
 	fi
 
 	export "$$(grep '^GTFS_FILTER=' < .env)"
 	if [ ! "$${GTFS_FILTER}" = "" ]; then \
-	  sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) gtfs-filtered; \
+	  sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) gtfs-filtered; \
 	else \
 	  sudo docker tag build-gtfs-modified build-gtfs-filtered; \
 	fi
 
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-data
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osmium-tool
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-excerpt
-	sudo docker compose -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-filtered
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osm-data
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osmium-tool
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-excerpt
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-filtered
 .PHONY: build-tilemaker
 build-tilemaker:
-	sudo docker compose -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
+	sudo docker compose $(COMPOSE_ARGS) -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker
 .PHONY: build-pelias-import
 build-pelias-import: clean-pelias-import
 	export "$$(grep '^BUILD_NAME=' < .env)"
@@ -71,25 +72,25 @@ build-pelias-import: clean-pelias-import
 
 	sudo install --directory -m755 -o1000 -g1000 "$${PELIAS_BUILD_DIR}/data/" "$${PELIAS_BUILD_DIR}/data/"{elasticsearch,openstreetmap,gtfs}
 
-	sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
-	sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml up -d --wait elasticsearch
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm schema ./bin/create_index
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-osm-excerpt /data/osm.pbf > "$${PELIAS_BUILD_DIR}/data/openstreetmap/osm.pbf"
 	sudo docker run --rm --entrypoint cat $${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "$${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
-	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
-	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull polylines-gen
-	sudo docker compose -f build-pelias.yml run --rm polylines-gen
-	sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
-	sudo docker compose -f build-pelias.yml run --rm placeholder   ./cmd/build.sh
-	sudo docker compose -f build-pelias.yml run --rm interpolation ./docker_build.sh
-	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/start
-	sudo docker compose -f build-pelias.yml run --rm openstreetmap ./bin/start
-	sudo docker compose -f build-pelias.yml run --rm polylines     ./bin/start
-	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull gtfs
-	sudo docker compose -f build-pelias.yml run --rm gtfs  ./bin/start
-	sudo docker compose -f build-pelias.yml down
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm whosonfirst   ./bin/download
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull polylines-gen
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm polylines-gen
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm placeholder   ./cmd/extract.sh
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm placeholder   ./cmd/build.sh
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm interpolation ./docker_build.sh
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm whosonfirst   ./bin/start
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm openstreetmap ./bin/start
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm polylines     ./bin/start
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull gtfs
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml run --rm gtfs  ./bin/start
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml down
 .PHONY: build-images
 build-images:
-	sudo docker compose build $(DOCKER_BUILD_ARGS)
+	sudo docker compose $(COMPOSE_ARGS) build $(DOCKER_BUILD_ARGS)
 
 .PHONY: test
 test: start  ## Test the built Docker images.
@@ -101,18 +102,18 @@ publish:  ## Upload Docker images to container registry.
 
 .PHONY: start
 start: stop  ## (Re-)Start local BikeTripPlanner instance.
-	sudo docker compose up -d --wait
+	sudo docker compose $(COMPOSE_ARGS) up -d --wait
 
 .PHONY: stop
 stop:  ## Stop local BikeTripPlanner instance.
-	sudo docker compose down
+	sudo docker compose $(COMPOSE_ARGS) down
 
 .PHONY: clean
 clean: clean-pelias-import  ## Clean up after `make build`.
 
 .PHONY: clean-pelias-import
 clean-pelias-import:
-	sudo docker compose -f build-pelias.yml down
+	sudo docker compose $(COMPOSE_ARGS) -f build-pelias.yml down
 
 	export "$$(grep '^PELIAS_BUILD_DIR=' < .env)"
 	sudo rm -rf "$${PELIAS_BUILD_DIR}/data"
