@@ -21,6 +21,8 @@
 
     // Whether the @async annotation in the GraphQL schema should lead to the fetch being executed asynchronously. This allows batch or alias queries to run in parallel at the cost of consuming extra threads.
     "AsyncGraphQLFetchers": true,
+    // Enable performing parts of the trip planning in parallel.
+    "ParallelRouting": true,
 
     // Enable the inspector endpoint for graph information for inspection/debugging purpose.
     // This results in e.g. the "Bike safety" layer in the OTP debug UI.
