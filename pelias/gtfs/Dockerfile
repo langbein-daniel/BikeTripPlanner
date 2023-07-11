@@ -15,7 +15,13 @@ WORKDIR ${WORKDIR}
 
 ARG DOCKERFILE_PELIAS_GTFS=https://github.com/HSLdevcom/pelias-gtfs
 RUN git clone --single-branch ${DOCKERFILE_PELIAS_GTFS} ${WORKDIR}
-RUN npm install
+
+# Manually install a recent version of wof-admin-lookup.
+# Otherwise, a later `npm install` fails as it pulls very outdated npm modules.
+# TODO: Remove this "dirty fix"
+RUN npm install "pelias-wof-admin-lookup@^7.0.0"
+
+RUN npm install || { npm ls --all; exit 1; }
 
 # add local code
 COPY ./start.sh ${WORKDIR}/bin/start

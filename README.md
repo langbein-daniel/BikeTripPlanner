@@ -174,7 +174,9 @@ sudo docker compose -f build-pelias.yml run --rm interpolation ./docker_build.sh
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/start
 sudo docker compose -f build-pelias.yml run --rm openstreetmap ./bin/start
 sudo docker compose -f build-pelias.yml run --rm polylines     ./bin/start
-sudo docker compose -f build-pelias.yml run --build --rm gtfs  ./bin/start
+sudo docker compose -f build-pelias.yml build --pull gtfs
+sudo docker compose -f build-pelias.yml run --rm gtfs          ./bin/start
+
 # Stop and remove intermediate containers.
 sudo docker compose -f build-pelias.yml down
 # Build final Pelias containers.

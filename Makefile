@@ -84,7 +84,7 @@ build-pelias-import: clean-pelias-import
 	sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/start
 	sudo docker compose -f build-pelias.yml run --rm openstreetmap ./bin/start
 	sudo docker compose -f build-pelias.yml run --rm polylines     ./bin/start
-	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) gtfs
+	sudo docker compose -f build-pelias.yml build $(DOCKER_BUILD_ARGS) --pull gtfs
 	sudo docker compose -f build-pelias.yml run --rm gtfs  ./bin/start
 	sudo docker compose -f build-pelias.yml down
 .PHONY: build-images
