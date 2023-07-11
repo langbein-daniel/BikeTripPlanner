@@ -12,6 +12,19 @@
   // The maximum time a street routing request is allowed to take before returning a timeout.
   "streetRoutingTimeout": "8s",
 
+  // The default parameters for the routing query.
+  "routingDefaults": {
+    // A multiplier for how bad walking is, compared to being in transit for equal lengths of time.
+    // See also: https://docs.opentripplanner.org/en/dev-2.x/OTP2-MigrationGuide/?h=maxwalkdistance#parameters-missing-in-otp2-but-intended-to-be-reintroduced
+    "walkRelutance": 1.25
+
+    // https://docs.opentripplanner.org/en/dev-2.x/RouteRequest/#rd_maxDirectStreetDuration
+    // "maxDirectStreetDuration": "PT4H"
+
+    // https://docs.opentripplanner.org/en/v2.3.0/RouteRequest/?h=waitreluctance
+    // "waitReluctance": 1.0
+  },
+
   // Configuration for transit searches with RAPTOR.
   // Values are taken from https://github.com/HSLdevcom/OpenTripPlanner-data-container/blob/8a33185b10ee764867f112726b83b314f05c0c7e/router-waltti/router-config.json#L37
   //
