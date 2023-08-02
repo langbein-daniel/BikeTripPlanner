@@ -338,3 +338,69 @@ Example: Extract GTFS zip file after the gtfs-modified build step:
 export "$(grep '^BUILD_NAME=' < .env)"
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-modified /data/gtfs.zip > gtfs.zip
 ```
+
+## Similar Projects
+
+### Feature matrix
+
+| Mode                          | OTP UI | Digitransit UI | MOTIS Demo | Navitia API | Bayern Fahrplan |
+|-------------------------------|--------|----------------|------------|-------------|-----------------|
+| "Bike"                        | yes    | yes            | no         | no          | no              |
+| "Bike" -> "Transit"           | yes    | yes            | yes (1)    | yes         | yes             |
+| "Transit" -> "Bike"           | yes    | yes            | yes (1)    | yes         | yes             |
+| "Bike" -> "Transit" -> "Bike" | ?      | no             | yes (1)    | yes         | yes             |
+| "Bike and Transit" (2)        | yes    | yes            | no         | no          | no              |
+
+(1): In the UI of the demo, at 30 minutes of bicycle duration can be selected. The API documentation does not mention an upper limit: https://motis-project.de/docs/api/endpoint/intermodal.html
+
+(2): MOTIS, Navitia and Bayern Fahrplan allow to search for journeys with bike trip legs before and after the public transit part in the middle which is transit-only (Trips where public transit is reached or left by bike). OpenTripPlanner (OTP) has a multimodal mode combining cycling with public transit ("Bike and Transit") where at any part of a journey bike trip legs can occur.
+
+| Routing options & other features                       | OTP UI | Digitransit UI | MOTIS Demo | Navitia API | Bayern Fahrplan |
+|--------------------------------------------------------|--------|----------------|------------|-------------|-----------------|
+| Bike speed                                             | yes    | yes            | no         | yes         | no              |
+| Vehicle types                                          | yes    | yes            | no         | yes         | yes             |
+| 2+ train types (regional, inter-city) (2)              | no (4) | no (3)         | no         | yes         | yes             |
+| Display user location on map _or_ export bicycle track | no     | yes            | no         | no          | no              |
+
+(2): The GTFS Schedule specification has only `Rail` (covering intercity and long-distance travel) as `route_type`, see https://gtfs.org/schedule/reference/#routestxt. The Google Transit implementation of GTFS has extended route types differentiating between e.g. High Speed Rail Service and Suburban Railway (ICE and S-Bahn in Germany): https://developers.google.com/transit/gtfs/reference/extended-route-types
+
+(3): There is only `Rail`, see `TransportMode` at https://github.com/HSLdevcom/digitransit-ui/blob/4f77be4bc7d5a9925e6055a19cf23da1cfd83bc3/app/constants.js#L18
+
+(4): The OTP `model.basic.TransitMode` enum has only `RAIL` as value: https://github.com/opentripplanner/OpenTripPlanner/blob/c19bbabbc8f1e6ec4a2b03faa82d67a5a0dee6a7/src/main/java/org/opentripplanner/transit/model/basic/TransitMode.java#L10. The [LegacyGraphQLApi](https://docs.opentripplanner.org/en/v2.3.0/sandbox/LegacyGraphQLApi/) is being developed by HSL (Digitransit). It has only `RAIL` as value of the `Mode` enum.
+
+### Open Source
+
+- [MOTIS](https://github.com/motis-project/motis)
+  - Intermodal Routing: computing optimal journeys mixing public transit, sharing mobility, walking, etc. in sensible ways.
+  - The system can consume schedule timetables in the GTFS or [HAFAS](https://www.fahrplanfelder.ch/fileadmin/fap_daten_test/hrdf.pdf) format as well as real time information in the GTFS-RT (and RISML, a proprietary format at Deutsche Bahn) as input data.
+  - Routing options to combine bike and transit
+    - https://motis-project.de/docs/features/routing.html
+    - https://motis-project.de/docs/api/endpoint/intermodal.html
+    - Bike to reach and leave public transit. The demo allows at most 30 minutes as bicycle duration.
+
+- [Navitia](https://github.com/hove-io/navitia#navitia)
+  - Multi-modal journeys computation
+  - Transit data import from GTFS and [NTFS](https://github.com/hove-io/ntfs-specification/tree/master#ntfs-specification)
+  - Routing options to combine bike and transit
+    - https://doc.navitia.io/#journeys
+    - Bike to reach and leave public transit (Journey request parameters `first_section_mode[]` and `last_section_mode[]`). User defined maximum bicycle duration (`max_duration_to_pt`).
+    - User defined bike speed (`bike_speed`).
+    - Specify vehicle types (Only bus and tram: `allowed_id[]=physical_mode:Bus&allowed_id[]=physical_mode:Tramway`)
+      - https://doc.navitia.io/#public-transport-objects: `physical_mode:Train`, `physical_mode:LocalTrain`, `physical_mode:LongDistanceTrain`
+
+- [RRRR](https://github.com/bliksemlabs/rrrr#rrrr-rapid-real-time-routing) (R4)
+  - RRRR Rapid Real-time Routing
+  - GTFS and GTFS-RT
+  - RAPTOR
+  - Last commit 2014
+- [Mumoro](https://github.com/Tristramg/mumoro)
+  - Multimodal routing: combining subway, walking and bike
+
+### Closed Source / Unknown
+
+- [Bayern Fahrplan]( https://www.bayern-fahrplan.de/de/auskunft)
+  - Powered by DEFAS Bayern (https://www.bayern-fahrplan.de/de/zusaetzliche-informationen/defas-bayern, https://de.wikipedia.org/wiki/DEFAS_Bayern)
+  - Routing options to combine bike and transit
+    - Regional public transit only
+    - Bike to reach and leave public transit. User defined maximum bicycle duration.
+    - Bicycle transport
