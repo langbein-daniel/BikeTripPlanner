@@ -7,7 +7,7 @@ FROM ${IMAGE_PELIAS_BASE}
 
 # download apt dependencies
 # note: this is done in one command in order to keep down the size of intermediate containers
-RUN apt-get update && apt-get install -y git unzip python python-pip python-dev build-essential gdal-bin rlwrap procps emacs curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git unzip python3 python3-pip python3-dev build-essential gdal-bin rlwrap procps emacs curl && rm -rf /var/lib/apt/lists/*
 
 # change working dir
 ENV WORKDIR=/code/pelias/gtfs
