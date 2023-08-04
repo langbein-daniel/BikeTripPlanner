@@ -105,6 +105,20 @@ sudo docker compose -f build-data.yml build --progress=plain --pull osmium-tool
 sudo docker compose -f build-data.yml build --progress=plain osm-filtered
 ```
 
+### DEM data
+
+Download DEM tiles.
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain --pull dem-data
+```
+
+Merge tiles into one DEM file.
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain dem-merged
+```
+
 ### Background map (Tileserver GL)
 
 ```shell

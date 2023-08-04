@@ -46,6 +46,9 @@ build-data:
 	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull osmium-tool
 	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-excerpt
 	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) osm-filtered
+
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) --pull dem-data
+	sudo docker compose $(COMPOSE_ARGS) -f build-data.yml build $(DOCKER_BUILD_ARGS) dem-merged
 .PHONY: build-tilemaker
 build-tilemaker:
 	sudo docker compose $(COMPOSE_ARGS) -f build-tilemaker.yml build $(DOCKER_BUILD_ARGS) --pull tilemaker

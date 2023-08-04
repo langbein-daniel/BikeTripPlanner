@@ -3,6 +3,7 @@ ARG IMAGE_OPENTRIPPLANNER=opentripplanner/opentripplanner
 
 FROM ${BUILD_NAME}-osm-filtered AS osm
 FROM ${BUILD_NAME}-gtfs-filtered AS gtfs
+FROM ${BUILD_NAME}-dem-merged AS dem
 
 FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Current entrypoint: /docker-entrypoint.sh
@@ -29,13 +30,12 @@ COPY ./otp-config.json    /var/opentripplanner/
 # Build street graph.
 # Results in `streetGraph.obj`.
 COPY --from=osm /data/osm.pbf /var/opentripplanner/osm.pbf
-# TODO: add DEM/GeoTIFF to pipeline
-#COPY merged.tif /var/opentripplanner/elevation.tif
+COPY --from=dem /data/dem.tif /var/opentripplanner/elevation.tif
 ARG JAVA_BUILD_OPTS
 ENV JAVA_OPTS=${JAVA_BUILD_OPTS}
 RUN /docker-entrypoint.sh --buildStreet \
-    && rm /var/opentripplanner/osm.pbf
-#    && rm /var/opentripplanner/elevation.tif
+    && rm /var/opentripplanner/osm.pbf \
+    && rm /var/opentripplanner/elevation.tif
 
 # Add timetable data to graph.
 # Results in `graph.obj`.

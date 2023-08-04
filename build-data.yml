@@ -69,3 +69,20 @@ services:
       args:
         - BUILD_NAME=${BUILD_NAME:?}
         - OTP_OSM_TAGS=${OTP_OSM_TAGS:?}
+
+  # Download DEM data.
+  dem-data:
+    build:
+      context: ${DOCKERFILE_DEM_DATA:?}
+      args:
+        - MIN_LON=${MIN_LON:?}
+        - MAX_LON=${MAX_LON:?}
+        - MIN_LAT=${MIN_LAT:?}
+        - MAX_LAT=${MAX_LAT:?}
+
+  # Merge DEM data.
+  dem-merged:
+    build:
+      context: ./dem-merge
+      args:
+        - BUILD_NAME=${BUILD_NAME:?}
