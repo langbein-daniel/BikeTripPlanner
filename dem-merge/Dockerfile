@@ -8,4 +8,5 @@ FROM ghcr.io/osgeo/gdal:alpine-normal-latest
 COPY --from=dem /data/ /data/input/
 
 RUN gdal_merge.py -o /data/dem.tif /data/input/*.tif \
+    && mv /data/input/credits.json /data/credits.json \
     && rm -r /data/input

@@ -119,6 +119,12 @@ Merge tiles into one DEM file.
 sudo docker compose -f build-data.yml build --progress=plain dem-merged
 ```
 
+View credits.
+
+```shell
+sudo docker compose -f build-data.yml run --rm dem-merged cat /data/credits.json
+```
+
 ### Background map (Tileserver GL)
 
 ```shell
