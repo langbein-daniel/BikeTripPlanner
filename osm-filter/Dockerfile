@@ -3,7 +3,8 @@ FROM ${BUILD_NAME}-osm-excerpt AS osm
 
 FROM ${BUILD_NAME}-osmium-tool
 WORKDIR /data
-COPY --from=osm /data/osm.pbf /data/input.pbf
+COPY --from=osm /data/osm.pbf      /data/input.pbf
+COPY --from=osm /data/credits.json /data/credits.json
 
 # Filter OSM data to reduce OTP memory usage.
 # https://docs.opentripplanner.org/en/dev-2.x/Preparing-OSM/#filtering-osm-data

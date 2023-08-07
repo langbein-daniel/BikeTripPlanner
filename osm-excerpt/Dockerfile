@@ -3,7 +3,8 @@ FROM ${BUILD_NAME}-osm-data AS osm
 
 FROM ${BUILD_NAME}-osmium-tool
 WORKDIR /data
-COPY --from=osm /data/osm.pbf /data/input.pbf
+COPY --from=osm /data/osm.pbf      /data/input.pbf
+COPY --from=osm /data/credits.json /data/credits.json
 
 ARG MIN_LON=10.011636032586688
 ARG MAX_LON=12.223993889052613

@@ -21,6 +21,7 @@ services:
       args:
         - IMAGE_ALPINE=${IMAGE_ALPINE:?}
         - GTFS_URL=${GTFS_URL:?}
+        - GTFS_CREDITS=${GTFS_CREDITS:?}
 
   # Modify GTFS data.
   gtfs-modified:
@@ -36,8 +37,8 @@ services:
     build:
       context: ./gtfs-filter
       args:
-        - IMAGE_R_BASE=${IMAGE_R_BASE:?}
         - BUILD_NAME=${BUILD_NAME:?}
+        - IMAGE_R_BASE=${IMAGE_R_BASE:?}
         - MIN_LON=${MIN_LON:?}
         - MAX_LON=${MAX_LON:?}
         - MIN_LAT=${MIN_LAT:?}
