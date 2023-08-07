@@ -12,7 +12,7 @@ The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransi
 **TLDR**:
 * Configuration is done in [.env](.env).
 * Run `make build` to build all Docker images.
-* Thereafter, run `make test` to check if the built containers start healthy or `make start` to keep the local instance running.
+* Thereafter, run `make test` to check if the built containers start healthy or run `make start` to keep the local instance running.
 * Optionally, use `make publish` to upload the Docker images into a registry.
 * Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
 
