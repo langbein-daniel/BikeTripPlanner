@@ -49,7 +49,7 @@ The following sections provide additional information about the individual build
 
 #### 1) gtfs-data
 
-First, download the GTFS data set:
+Download the GTFS dataset:
 
 ```shell
 sudo docker compose -f build-data.yml build --progress=plain --pull gtfs-data
@@ -107,19 +107,19 @@ sudo docker compose -f build-data.yml build --progress=plain osm-filtered
 
 ### DEM data
 
-Download DEM tiles.
+Download DEM tiles:
 
 ```shell
 sudo docker compose -f build-data.yml build --progress=plain --pull dem-data
 ```
 
-Merge tiles into one DEM file.
+Merge tiles into one DEM file:
 
 ```shell
 sudo docker compose -f build-data.yml build --progress=plain dem-merged
 ```
 
-View credits.
+View credits:
 
 ```shell
 sudo docker compose -f build-data.yml run --rm dem-merged cat /data/credits.json

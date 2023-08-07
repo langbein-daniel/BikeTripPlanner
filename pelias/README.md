@@ -39,7 +39,7 @@ See also:
 
 The second possibility is to specify several small areas that together cover the desired area. These areas are specified by means of Who's On First IDs.
 
-If no country code is given additionally, then Pelias will download the Who's On First database of the whole planet (approx. 51 GB) as it does not know which data set includes the IDs.
+If no country code is given additionally, then Pelias will download the Who's On First database of the whole planet (approx. 51 GB) as it does not know which dataset includes the IDs.
 
 On [https://spelunker.whosonfirst.org](https://spelunker.whosonfirst.org) one can search for countries and other geographical areas, view their boundary on a map and get their ID.
 

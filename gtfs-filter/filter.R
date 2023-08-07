@@ -49,4 +49,4 @@ gtfs_data <- read_gtfs(IN)
 filtered_data <- filter_by_sf(gtfs_data, polygon_sfc)
 write_gtfs(filtered_data, OUT)
 
-print("Finished filtering GTFS data set.", quote=FALSE)
+print("Finished filtering GTFS dataset.", quote=FALSE)
