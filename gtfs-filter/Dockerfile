@@ -1,9 +1,9 @@
 ARG BUILD_NAME=build
+ARG IMAGE_R_BASE=r-base
+
 FROM ${BUILD_NAME}-gtfs-modified AS gtfs
 
-ARG IMAGE_R_BASE=r-base
 FROM ${IMAGE_R_BASE}
-
 RUN apt-get update
 RUN apt-get install -y libssl-dev
 RUN apt-get install -y libudunits2-dev
