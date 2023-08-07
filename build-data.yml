@@ -87,3 +87,10 @@ services:
       context: ./dem-merge
       args:
         - BUILD_NAME=${BUILD_NAME:?}
+
+  # Credits.
+  credits:
+    build:
+      context: ./credits
+      args:
+        - BUILD_NAME=${BUILD_NAME:?}

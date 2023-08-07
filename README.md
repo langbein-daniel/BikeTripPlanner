@@ -119,12 +119,6 @@ Merge tiles into one DEM file:
 sudo docker compose -f build-data.yml build --progress=plain dem-merged
 ```
 
-View credits:
-
-```shell
-sudo docker compose -f build-data.yml run --rm dem-merged cat /data/credits.json
-```
-
 ### Background map (Tileserver GL)
 
 ```shell
@@ -209,6 +203,22 @@ sudo docker compose build --progress=plain api libpostal placeholder interpolati
 
 ```shell
 sudo docker compose build --progress=plain --pull digitransit-ui
+```
+
+### License (Open Data Sources)
+
+The source code of this project is licensed under the Clear BSD License, see [LICENSE](LICENSE). The licenses of used software dependencies and data sources are different.
+
+License information of (some of the) used open data sources can be collected with:
+
+```shell
+sudo docker compose -f build-data.yml build --progress=plain credits
+```
+
+The resulting `credits.json` file can be viewed with:
+
+```shell
+sudo docker compose -f build-data.yml run --rm credits cat /data/credits.json
 ```
 
 ## Test on local machine
