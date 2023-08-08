@@ -199,12 +199,6 @@ sudo docker compose build --progress=plain api libpostal placeholder interpolati
 #sudo rm -r "${PELIAS_BUILD_DIR}/data"
 ```
 
-### Web UI (Digitransit-UI)
-
-```shell
-sudo docker compose build --progress=plain --pull digitransit-ui
-```
-
 ### License (Open Data Sources)
 
 The source code of this project is licensed under the Clear BSD License, see [LICENSE](LICENSE). The licenses of used software dependencies and data sources are different.
@@ -219,6 +213,20 @@ The resulting `credits.json` file can be viewed with:
 
 ```shell
 sudo docker compose -f build-data.yml run --rm credits cat /data/credits.json
+```
+
+For Digitransit UI to correctly credit used open data sources, the variable `DATA_SOURCES_PARAGRAPHS` has to be updated in [.env](.env). The new value can be printed with:
+
+```shell
+printf "'"
+sudo docker compose -f build-data.yml run --rm credits cat /data/credits.json | jq '[.[].text]' | sed "s|'|\\\'|" | jq -c -j '.[] |= sub("(?<x>https://[^ ]+)"; "<a href=\"\(.x)\">\(.x)</a>")'
+printf "'\n"
+```
+
+### Web UI (Digitransit-UI)
+
+```shell
+sudo docker compose build --progress=plain --pull digitransit-ui
 ```
 
 ## Test on local machine
