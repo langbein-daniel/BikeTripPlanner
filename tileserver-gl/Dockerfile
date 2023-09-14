@@ -13,7 +13,7 @@ RUN apt-get update \
 ARG MAP_STYLE_URL=https://github.com/langbein-daniel/cyclo-bright-gl-style.git
 RUN git clone --single-branch ${MAP_STYLE_URL} /data
 
-FROM ${BUILD_NAME}-osm-excerpt AS osm
+FROM localhost/${BUILD_NAME}_osm-excerpt AS osm
 
 FROM openmaptiles/openmaptiles-tools:7.0 AS sprites
 WORKDIR /data
@@ -22,7 +22,7 @@ RUN mkdir /build \
     && spritezero /build/style icons \
     && spritezero --retina /build/style@2x icons
 
-FROM ${BUILD_NAME}-tilemaker AS tilemaker
+FROM localhost/${BUILD_NAME}_tilemaker AS tilemaker
 RUN apt-get update \
     && apt-get install -y make bc curl unzip jq \
     && rm -rf /var/lib/apt/lists/*

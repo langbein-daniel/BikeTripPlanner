@@ -1,7 +1,7 @@
 ARG BUILD_NAME=build
-FROM ${BUILD_NAME}-osm-excerpt AS osm
+FROM localhost/${BUILD_NAME}_osm-excerpt AS osm
 
-FROM ${BUILD_NAME}-osmium-tool
+FROM localhost/${BUILD_NAME}_osmium-tool
 WORKDIR /data
 COPY --from=osm /data/osm.pbf      /data/input.pbf
 COPY --from=osm /data/credits.json /data/credits.json

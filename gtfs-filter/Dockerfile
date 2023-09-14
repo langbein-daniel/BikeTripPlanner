@@ -1,7 +1,7 @@
 ARG BUILD_NAME=build
 ARG IMAGE_R_BASE=r-base
 
-FROM ${BUILD_NAME}-gtfs-modified AS gtfs
+FROM localhost/${BUILD_NAME}_gtfs-modified AS gtfs
 
 FROM ${IMAGE_R_BASE}
 RUN apt-get update

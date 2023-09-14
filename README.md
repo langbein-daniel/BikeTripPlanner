@@ -41,7 +41,9 @@ For advanced configuration, see:
 
 ## Build data images
 
-Prerequisites: Install Docker Compose, `jq`, `sudo` and optionally `make`.
+Prerequisites:
+* Manually install Podman/Docker Compose, `jq`, `sudo` and optionally `make`.
+* Alternatively: The shell environment is described in [shell.nix](shell.nix). You can run `nix-shell` to automatically install the dependencies.
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
 
@@ -52,7 +54,7 @@ The following sections provide additional information about the individual build
 Download the GTFS dataset:
 
 ```shell
-sudo docker compose -f build-data.yml build --progress=plain --pull gtfs-data
+podman-compose -f build-data.yml build --pull gtfs-data
 ```
 
 #### 2) gtfs-modified
@@ -60,7 +62,7 @@ sudo docker compose -f build-data.yml build --progress=plain --pull gtfs-data
 If desired, the GTFS feed can be modified: Add or change the `bikes_allowed` column, delete files from the GTFS feed or fix unescaped double-quotes.
 
 ```shell
-sudo docker compose -f build-data.yml build --progress=plain gtfs-modified
+podman-compose -f build-data.yml build gtfs-modified
 ```
 
 This step is optional and kan be skipped with:
@@ -74,7 +76,7 @@ sudo docker tag build-gtfs-data build-gtfs-modified
 If desired, the GTFS feed can be filtered to the bounding box: Only routes (and all linked data) that reside inside the or intersect with the bounding box are kept.
 
 ```shell
-sudo docker compose -f build-data.yml build --progress=plain gtfs-filtered
+podman-compose -f build-data.yml build gtfs-filtered
 ```
 
 This step is optional and kan be skipped with:
@@ -88,7 +90,18 @@ sudo docker tag build-gtfs-modified build-gtfs-filtered
 #### 1) osm-data
 
 ```shell
-sudo docker compose -f build-data.yml build --progress=plain --pull osm-data
+podman-compose -f build-data.yml build --pull osm-data
+```
+
+TODO: I get this error:
+
+```
+STEP 4/5: ADD ${OSM_PBF_URL} osm.pbf
+ERRO[0352] Can't add file /home/yoda/.local/share/containers/storage/overlay/c9ad648a26cb7794faaf6eac4555267e32826bb27de3b0b79604cef2548aa615/diff/data/osm.pbf to tar: io: read/write on closed pipe 
+ERRO[0352] io: read/write on closed pipe                
+ERRO[0352] Can't close tar writer: io: read/write on closed pipe 
+Error: committing container for step {Env:[OSM_PBF_URL=https://download.geofabrik.de/europe/germany-latest.osm.pbf PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin] Command:add Args:[https://download.geofabrik.de/europe/germany-latest.osm.pbf osm.pbf] Flags:[] Attrs:map[] Message:ADD ${OSM_PBF_URL} osm.pbf Original:ADD ${OSM_PBF_URL} osm.pbf}: copying layers and metadata for container "d577a53a29b8160fedc5f6a30ba5fba6c45774d502beb298986f8e34cab3bf48": initializing source containers-storage:51d1d702da81-working-container: storing layer "c9ad648a26cb7794faaf6eac4555267e32826bb27de3b0b79604cef2548aa615" to file: io: read/write on closed pipe
+exit code: 125
 ```
 
 #### 2) osm-excerpt
@@ -171,8 +184,8 @@ sudo docker compose -f build-pelias.yml up -d --wait elasticsearch
 # Initialize Elasticsearch.
 sudo docker compose -f build-pelias.yml run --rm schema ./bin/create_index
 # Download, prepare and import data:
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/osm.pbf"
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
+sudo docker run --rm --entrypoint cat localhost/${BUILD_NAME}_osm-excerpt /data/osm.pbf > "${PELIAS_BUILD_DIR}/data/openstreetmap/osm.pbf"
+sudo docker run --rm --entrypoint cat localhost/${BUILD_NAME}_gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 
 # The Pelias Docker-Compose helper script uses the following command:
@@ -363,7 +376,20 @@ On your BikeTripPlanner server:
 
 ```shell
 cd deployment
-sudo docker compose -f btp-only.yml up -d --wait
+podman-compose -f btp-only.yml up -d
+```
+
+TODO: I get this error when starting the api service:
+
+```
+podman run --name=deployment_api_1 -d --requires=deployment_pip_1,deployment_libpostal_1,deployment_elasticsearch_1,deployment_interpolation_1,deployment_placeholder_1 --label io.podman.compose.config-hash=19dc7758c20c906173da8fba4b68957b8575092cd18ff5c412f27279f26d4002 --label io.podman.compose.project=deployment --label io.podman.compose.version=1.0.6 --label PODMAN_SYSTEMD_UNIT=podman-compose@deployment.service --label com.docker.compose.project=deployment --label com.docker.compose.project.working_dir=/home/yoda/BikeTripPlanner/deployment --label com.docker.compose.project.config_files=btp-only.yml --label com.docker.compose.container-number=1 --label com.docker.compose.service=api --net deployment_proxy,deployment_pelias --network-alias api -p 4000:4000 --restart unless-stopped biketripplanner/api:VGN-20230804T155423
+Error: creating container storage: the container name "deployment_api_1" is already in use by 95ab7402e31354e2b6e23e80f8a543d8fc5ae293b362a3ec88b5c064fa834b0d. You have to remove that container to be able to reuse that name: that name is already in use
+exit code: 125
+podman start deployment_api_1
+ERRO[0000] Starting some container dependencies         
+ERRO[0000] "crun: setrlimit `RLIMIT_MEMLOCK`: Operation not permitted: OCI permission denied" 
+Error: unable to start container "95ab7402e31354e2b6e23e80f8a543d8fc5ae293b362a3ec88b5c064fa834b0d": starting some containers: internal libpod error
+exit code: 125
 ```
 
 ## Other notes
@@ -374,7 +400,7 @@ Example: Extract GTFS zip file after the gtfs-modified build step:
 
 ```shell
 export "$(grep '^BUILD_NAME=' < .env)"
-sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-modified /data/gtfs.zip > gtfs.zip
+sudo docker run --rm --entrypoint cat localhost/${BUILD_NAME}_gtfs-modified /data/gtfs.zip > gtfs.zip
 ```
 
 ## Similar Projects

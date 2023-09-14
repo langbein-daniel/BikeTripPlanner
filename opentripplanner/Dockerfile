@@ -1,9 +1,9 @@
 ARG BUILD_NAME=build
 ARG IMAGE_OPENTRIPPLANNER=opentripplanner/opentripplanner
 
-FROM ${BUILD_NAME}-osm-filtered AS osm
-FROM ${BUILD_NAME}-gtfs-filtered AS gtfs
-FROM ${BUILD_NAME}-dem-merged AS dem
+FROM localhost/${BUILD_NAME}_osm-filtered AS osm
+FROM localhost/${BUILD_NAME}_gtfs-filtered AS gtfs
+FROM localhost/${BUILD_NAME}_dem-merged AS dem
 
 FROM ${IMAGE_OPENTRIPPLANNER} as builder
 # Current entrypoint: /docker-entrypoint.sh

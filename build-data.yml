@@ -26,6 +26,7 @@ services:
   # Modify GTFS data.
   gtfs-modified:
     build:
+      # TODO: podman does not support this. https://github.com/containers/podman-compose/issues/127
       context: ${DOCKERFILE_GTFS_MODIFICATIONS:?}
       args:
         - BUILD_NAME=${BUILD_NAME:?}
