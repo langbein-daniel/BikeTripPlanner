@@ -9,11 +9,11 @@ services:
   #
 
   tileserver-gl:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_TILESERVER_GL:?}
     restart: unless-stopped
     ports:
@@ -26,11 +26,11 @@ services:
   #
 
   opentripplanner:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_OPENTRIPPLANNER:?}
     restart: unless-stopped
     ports:
@@ -43,11 +43,11 @@ services:
   #
 
   api:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_API:?}
     restart: unless-stopped
     ports:
@@ -68,55 +68,55 @@ services:
         condition: service_healthy
 
   libpostal:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_LIBPOSTAL:?}
     restart: unless-stopped
     networks:
       - pelias
 
   placeholder:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_PLACEHOLDER:?}
     restart: unless-stopped
     networks:
       - pelias
 
   interpolation:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_INTERPOLATION:?}
     restart: unless-stopped
     networks:
       - pelias
 
   pip:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_PIP:?}
     restart: unless-stopped
     networks:
       - pelias
 
   elasticsearch:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_PELIAS_ELASTICSEARCH:?}
     restart: unless-stopped
     ulimits:
@@ -137,11 +137,11 @@ services:
   #
 
   digitransit-ui:
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '1'
+    #    logging:
+    #      driver: json-file
+    #      options:
+    #        max-size: '10m'
+    #        max-file: '1'
     image: ${IMAGE_DIGITRANSIT_UI:?}
     environment:
       OTP_URL: https://${DOMAIN_OPENTRIPPLANNER:?}/otp/routers/default/
@@ -166,13 +166,13 @@ services:
   # They contain personal information such as IP addresses.
   #
 
-  docker_cron_logging:
-    image: busybox
-    volumes:
-      - /mnt/data/docker/containers:/docker-containers
-    # Daily at 04:30: Truncate docker logfiles.
-    command: >
-      sh -c "
-      mkdir -p /var/spool/cron/crontabs/
-      && echo '30 4 * * * truncate -s 0 /docker-containers/*/*-json.log > /proc/1/fd/1 2>/proc/1/fd/2' > /var/spool/cron/crontabs/root
-      && crond -f -d 8"
+#  docker_cron_logging:
+#    image: busybox
+#    volumes:
+#      - /mnt/data/docker/containers:/docker-containers
+#    # Daily at 04:30: Truncate docker logfiles.
+#    command: >
+#      sh -c "
+#      mkdir -p /var/spool/cron/crontabs/
+#      && echo '30 4 * * * truncate -s 0 /docker-containers/*/*-json.log > /proc/1/fd/1 2>/proc/1/fd/2' > /var/spool/cron/crontabs/root
+#      && crond -f -d 8"
