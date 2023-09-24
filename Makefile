@@ -8,9 +8,10 @@ SHELL := bash
 #   When using shell variables in a recipe, don't forget to escape them with `$`.
 #   To search for unescaped `$`, the following regex can be used: `[^\$]\$[^\$]`.
 
-DOCKER_BUILD_ARGS :=
+DOCKER_BUILD_ARGS := --progress=plain
 #DOCKER_BUILD_ARGS := --no-cache
-COMPOSE_ARGS := --progress=plain
+COMPOSE_ARGS :=
+#COMPOSE_ARGS := --progress=plain
 
 .PHONY: all
 all: build  ## Default target. Build and test BikeTripPlanner Docker images.
