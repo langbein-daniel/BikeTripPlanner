@@ -13,7 +13,7 @@ function main(){
   local services=()
   while IFS= read -r service; do
     services+=("${service}")
-  done < <(docker-compose config --services)
+  done < <(docker compose config --services)
 
   # Set shell variables from `.env`.
   NAME=''

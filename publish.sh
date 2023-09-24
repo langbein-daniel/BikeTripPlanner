@@ -25,7 +25,7 @@ function main(){
     # No arguments given, use all services specified inside docker-compose.yml file.
     while IFS= read -r service; do
       services+=("${service}")
-    done < <(docker-compose config --services)
+    done < <(docker compose config --services)
   else
     # Use only the specified services.
     services+=("$@")
