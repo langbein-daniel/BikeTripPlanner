@@ -175,7 +175,7 @@ sudo docker run --rm --entrypoint cat ${BUILD_NAME}-osm-excerpt /data/osm.pbf > 
 sudo docker run --rm --entrypoint cat ${BUILD_NAME}-gtfs-filtered   /data/gtfs.zip        > "${PELIAS_BUILD_DIR}/data/gtfs/gtfs.zip"
 sudo docker compose -f build-pelias.yml run --rm whosonfirst   ./bin/download
 
-# The Pelias Docker-Compose helper script uses the following command:
+# The Pelias Docker Compose helper script uses the following command:
 #   sudo docker compose -f build-pelias.yml run --rm polylines     ./docker_extract.sh
 # But this complains about a too large OSM file (e.g. of whole Germany).
 # Thus, we use another tool to generate polylines:
