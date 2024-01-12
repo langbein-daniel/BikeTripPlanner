@@ -71,7 +71,7 @@ sudo docker tag build-gtfs-data build-gtfs-modified
 
 #### 3) gtfs-filter
 
-If desired, the GTFS feed can be filtered to the bounding box: Only routes (and all linked data) that reside inside the or intersect with the bounding box are kept.
+If desired, the GTFS feed can be filtered to the bounding box: Only routes (and all linked data) that reside inside the bounding box or intersect with it are kept.
 
 ```shell
 sudo docker compose -f build-data.yml build --progress=plain gtfs-filtered
