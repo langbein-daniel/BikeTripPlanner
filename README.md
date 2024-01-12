@@ -41,7 +41,7 @@ For advanced configuration, see:
 
 ## Build data images
 
-Prerequisites: Install `docker compose`, `jq`, `sudo` and optionally `make`. This can e.g. be done by running `nix-shell`.
+Prerequisites: Install `docker compose`, `jq`, `sudo` and optionally `make`.
 
 The following sections provide additional information about the individual build steps. There is also a [Makefile](Makefile) to accomplish the same.
 

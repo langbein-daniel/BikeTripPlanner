@@ -3,9 +3,9 @@ let
 in
   pkgs.mkShell {
     packages = [
-      #pkgs.sudo
+      # sudo
+      # docker and docker-compose
       pkgs.gnumake
       pkgs.jq
-      pkgs.podman-compose
     ];
   }
