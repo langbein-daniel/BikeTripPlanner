@@ -18,7 +18,7 @@ The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransi
 
 ## Demo Video
 
-![demo.mp4](demo.mp4)
+https://github.com/user-attachments/assets/48458544-a22c-4209-ad7b-cdde80f24eeb
 
 ## Demo Instance (Currently Offline)
 
