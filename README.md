@@ -16,7 +16,11 @@ The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransi
 * Optionally, use `make publish` to upload the Docker images into a registry.
 * Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
 
-## Demo
+## Demo Video
+
+![demo.mp4](demo.mp4)
+
+## Demo Instance (Currently Offline)
 
 A demo instance covering the area of the German transport association
 VGN is available at [https://biketripplanner.de/](https://biketripplanner.de/).
