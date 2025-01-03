@@ -16,6 +16,10 @@ The core components are [Digitransit UI](https://github.com/HSLdevcom/digitransi
 * Optionally, use `make publish` to upload the Docker images into a registry.
 * Lastly, see [Deployment](#deployment) for detains on making your BikeTripPlanner instance publicly available under a domain and with HTTPS certificates.
 
+**Thesis**:
+
+This project is part of my bachelor thesis which can be read here: [Evaluation of Open Data Using the Example of a Public Transport Navigation Website](https://oss.cs.fau.de/2023/08/01/final-thesis-evaluation-of-open-data-using-the-example-of-a-public-transport-navigation-website/)
+
 ## Demo Video
 
 https://github.com/user-attachments/assets/48458544-a22c-4209-ad7b-cdde80f24eeb
